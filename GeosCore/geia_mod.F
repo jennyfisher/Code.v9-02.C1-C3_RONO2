@@ -447,7 +447,8 @@
       
       ! Define the filename
       ! reads from the 2x2.5 directory instead
-      FILENAME = '/as/data/geos/GEOS_2x2.5/' //
+!      FILENAME = '/as/data/geos/GEOS_2x2.5/' //
+      FILENAME = TRIM( DATA_DIR ) // '../GEOS_2x2.5/' //
      &          'fossil_200104/MELD2x25' 
 
       WRITE ( 6, 100 ) TRIM( FILENAME ) 

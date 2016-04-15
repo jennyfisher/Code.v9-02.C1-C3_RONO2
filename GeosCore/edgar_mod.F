@@ -507,7 +507,8 @@
       ENDDO
 
       ! Now read in CAC mask 
-      CACFILENAME = TRIM('/home/kyu/regrid/CanadaMask.generic.1x1')
+      !CACFILENAME = TRIM('/home/kyu/regrid/CanadaMask.generic.1x1')
+      CACFILENAME = TRIM('../CanadaMask.generic.1x1')
       XTAUC = GET_TAU0( 1, 1, 2000)
 
       ! Read mask
@@ -1122,7 +1123,8 @@
       !WHERE( BRMASK .gt. 0 ) E_CO_SHIP_1x1 = 0d0
 
       ! Read in CAC MASK
-      CACFILENAME = TRIM( '/home/kyu/regrid/CanadaMask.generic.1x1' )
+      !CACFILENAME = TRIM( '/home/kyu/regrid/CanadaMask.generic.1x1' )
+      CACFILENAME = TRIM('../CanadaMask.generic.1x1')
       XTAUC = GET_TAU0( 1, 1, 2000 )
 
       CALL READ_BPCH2( CACFILENAME, 'LANDMAP', 2,

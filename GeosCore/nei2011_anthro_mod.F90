@@ -550,13 +550,17 @@
       ENDIF
 
       ! Base data directory
-      DATA_DIR_NEI =  '/as/data/geos/ExtData/HEMCO/NEI2011/v2015-03/'// &
-        TRIM( TIME_STR ) // '/NEI11_0.1x0.1_2011'
+      !DATA_DIR_NEI =  '/as/data/geos/ExtData/HEMCO/NEI2011/v2015-03/'// &
+      DATA_DIR_NEI =  '/short/m19/geos-chem/data/' // &
+                      'ExtData/HEMCO/NEI2011/v2015-03/'// &
+                      TRIM( TIME_STR ) // '/NEI11_0.1x0.1_2011'
       
       ! For NH3 -- files with agricultural emissions only (jaf, 12/12/13)
       ! Eventually these files will move to the data directory
-      DATA_DIR_NH3_ag = &
-         '/as/data/geos/ExtData/HEMCO/NEI2011_ag_only/v2015-03/'
+      !DATA_DIR_NH3_ag = &
+      !   '/as/data/geos/ExtData/HEMCO/NEI2011_ag_only/v2015-03/'
+      DATA_DIR_NH3_ag = '/short/m19/geos-chem/data/' // &
+                        'ExtData/HEMCO/NEI2011_ag_only/v2015-03/'
      
       ! Get day
       THISDAY   = GET_DAY()

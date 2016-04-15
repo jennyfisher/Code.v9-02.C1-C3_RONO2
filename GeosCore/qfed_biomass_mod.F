@@ -397,7 +397,9 @@
 
       ! Directory with QFED emissions
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-         QFED_DIR = '/as/data/geos/ExtData/HEMCO/QFED/v2014-09/'
+!         QFED_DIR = '/as/data/geos/ExtData/HEMCO/QFED/v2014-09/'
+         QFED_DIR = '/short/m19/geos-chem/data/' //
+     &              'ExtData/HEMCO/QFED/v2014-09/'
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
          TIME_STR =  'YYYY/MM'
       !=================================================================

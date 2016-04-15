@@ -252,7 +252,8 @@
          FIRST = .FALSE.
       ENDIF            
 
-      FILENAME2 = '/as/home/ktravis/USA_mask.geos.NEI11.01x01.nc'
+      !FILENAME2 = '/as/home/ktravis/USA_mask.geos.NEI11.01x01.nc'
+      FILENAME2 = '../USA_mask.geos.NEI11.01x01.nc'
 
       ! Echo info
       WRITE( 6, 200 ) TRIM( FILENAME2 )

@@ -410,7 +410,8 @@
          ! Directory with FINN emissions
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !%%% KLUDGE FOR SEAC4RS: Moved FINN directory to /as/cache (bmy, 10/31/13)
-         FINN_DIR = '/home/skim/FINN/FINN_files/'         
+!         FINN_DIR = '/home/skim/FINN/FINN_files/'         
+         FINN_DIR = '/FINN_201407/'
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
          TIME_STR = 'daily'
 
@@ -468,14 +469,14 @@
 
          ! Set filename for this species
          SPEC_NAME = FINN_SPEC_NAME(N)
-!         FILENAME = TRIM( DATA_DIR_NATIVE ) // TRIM( FINN_DIR ) //
-!     &              TRIM( TIME_STR ) // '_' // TRIM( SPEC_NAME ) //
-!     &              '_YYYY_05x05.nc'
-         ! This will probably need to be updated once we get the
-         ! filenames (skim, 7/27/13)
-         FILENAME = TRIM( FINN_DIR ) //
+         FILENAME = TRIM( DATA_DIR_NATIVE ) // TRIM( FINN_DIR ) //
      &              TRIM( TIME_STR ) // '_' // TRIM( SPEC_NAME ) //
      &              '_YYYY_05x05.nc'
+         ! This will probably need to be updated once we get the
+         ! filenames (skim, 7/27/13)
+!         FILENAME = TRIM( FINN_DIR ) //
+!     &              TRIM( TIME_STR ) // '_' // TRIM( SPEC_NAME ) //
+!     &              '_YYYY_05x05.nc'
          CALL EXPAND_DATE( FILENAME, YYYYMMDD, 000000 )
 
          ! Don't waste time reading in files if we don't need them
