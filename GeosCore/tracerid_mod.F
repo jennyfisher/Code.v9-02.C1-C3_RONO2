@@ -282,6 +282,9 @@
       INTEGER            :: IDAPI,  IDLIM,   IDPIP,  IDMONIT
       INTEGER            :: IDAPIO2, IDLIMO2, IDOLNN,  IDOLND
 
+      ! C1-C3 RONO2 (jaf, 4/15/16)
+      INTEGER            :: IDMENO3, IDETNO3, IDPRNO3
+
       INTEGER            :: IDDRYNO2,   IDDRYO3,   IDDRYPAN
       INTEGER            :: IDDRYHNO3,  IDDRYHNO2, IDDRYH2O2
       INTEGER            :: IDDRYACET,  IDDRYPMN,  IDDRYPMNN
@@ -518,6 +521,9 @@
 
       ! Add monoterpene tracers (jaf, 3/16/15)
       INTEGER            :: IDTAPI, IDTLIM, IDTMONIT, IDTHONIT
+
+      ! Add C1-C3 RONO2 tracers (jaf, 4/15/16)
+      INTEGER            :: IDTMENO3, IDTETNO3, IDTPRNO3
 
       ! For tagged Hg simulation
       INTEGER              :: N_Hg_CATS
@@ -1572,6 +1578,14 @@
                IDTMONIT= N
             CASE ( 'HONIT' )
                IDTHONIT= N
+
+            ! Add C1-C3 RONO2 tracers (jaf, 4/15/16)
+            CASE ( 'MENO3' )
+               IDTMENO3  = N
+            CASE ( 'ETNO3' )
+               IDTETNO3  = N
+            CASE ( 'PRNO3' )
+               IDTPRNO3= N
 
             !--------------------------------
             ! Tagged Ox Tracers
@@ -4849,6 +4863,9 @@
       IDOLND    = 0
       IDMONIT   = 0
       IDHONIT   = 0
+      IDMENO3   = 0
+      IDETNO3   = 0
+      IDPRNO3   = 0
 
       ! GEOS-CHEM Tracer ID #'s
       IDTNO      = 0
@@ -5011,6 +5028,11 @@
       IDTLIM    = 0
       IDTMONIT  = 0
       IDTHONIT  = 0
+ 
+      ! Add C1-C3 RONO2 tracers (jaf, 4/15/16)
+      IDTMENO3  = 0
+      IDTETNO3  = 0
+      IDTPRNO3  = 0
  
       ! SOAupdate: convert all POA/POG to 1 and 2 (hotp 10/11/09)
        !semivolpoa (hotp 8/24/09)
