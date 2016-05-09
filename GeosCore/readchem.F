@@ -702,6 +702,7 @@
       ! NREAD is in comode.h (8/1/09)
       !READ(KGLC,332) (RINP(I),PINP(I),XINP(I),I=1,20)
       READ(KGLC,332) (RINP(I),PINP(I),XINP(I),I=1,NREAD)
+
 !
  155  FORMAT('READCHEM: NCOF + 1 > MXCOF IN GLOBCHEM.DAT',3I4)
  330  FORMAT(A1,1X,I4,1X,ES8.2,1X,ES8.1,1X,I6,1X,I1,1X,A2,F6.2,1X,
@@ -1177,6 +1178,16 @@
                   NKSPECAT(NNADDAT(NCS),NCS) = NK
                ENDIF
 
+               ! New branching ratio for RO2 + NO --> RONO2
+               IF (SPECL(1).EQ.'R')  THEN
+                  NNADDR(NCS)               = NNADDR(NCS) + 1
+                  NKSPECR( NNADDR(NCS),NCS) = NK
+               ENDIF
+               IF (SPECL(1).EQ.'U')  THEN
+                  NNADDS(NCS)               = NNADDS(NCS) + 1
+                  NKSPECU( NNADDS(NCS),NCS) = NK
+               ENDIF
+!
 !
 ! *********************************************************************
 ! *                       SURFACE REACTIONS                           * 

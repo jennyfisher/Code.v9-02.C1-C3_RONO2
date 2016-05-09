@@ -181,7 +181,7 @@
 
       ! External functions
       REAL*8, EXTERNAL :: RTFUNC, FYRNO3,  ARSL1K,  FJFUNC, FYHORO
-      REAL*8, EXTERNAL :: FCRO2HO2 !fgap
+      REAL*8, EXTERNAL :: FCRO2HO2, ALPHA_RNO3
 
       CHARACTER*8      :: SPECNAME
 
@@ -700,6 +700,34 @@
      $              T3K(KLOOP)))
             ENDDO
          ENDDO
+!
+! ---  K = K1*FYRNO3(K2,M,T)  ---   addition branch of RO2+NO
+! special updated yields for ETNO3
+!    CONSTC includes a factor to convert PRESS3 from (dyn cm-2) to (atm)
+         DO I          = 1, NNADDR(NCS)
+            NK         = NKSPECR( I,NCS )
+            DO KLOOP   = 1, KTLOOP
+               JLOOP           = LREORDER(JLOOPLO + KLOOP)
+               RRATE(KLOOP,NK) = RRATE(KLOOP,NK) * !0.019 
+     +               ALPHA_RNO3(RRATE(KLOOP,NK+1),
+     +                          CONSTC*PRESS3(JLOOP),
+     +                          T3K(KLOOP))
+            ENDDO
+         ENDDO
+!
+! ---  K = K1*(1-FYRNO3(K2,M,T))  ---  abstraction branch of RO2+NO
+! special updated yields for ETNO3
+         DO I          = 1, NNADDS(NCS)
+            NK         = NKSPECU( I,NCS )
+            DO KLOOP   = 1, KTLOOP
+               JLOOP           = LREORDER(JLOOPLO + KLOOP)
+               RRATE(KLOOP,NK) = RRATE(KLOOP,NK) * !0.981
+     +            (1.D0 -  ALPHA_RNO3(RRATE(KLOOP,NK+1),
+     +                                CONSTC*PRESS3(JLOOP),
+     +                                T3K(KLOOP)))
+            ENDDO
+         ENDDO
+!
 !
 ! ---  K = K1*([O2]+3.5D18)/(2*[O2]+3.5D18) --- HO2+2*CO branch of GLYX+OH/NO3
          DO I          = 1, NNADDC(NCS)

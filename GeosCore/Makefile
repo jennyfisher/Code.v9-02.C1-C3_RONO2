@@ -324,6 +324,8 @@ aerosol_mod.o               : aerosol_mod.F                                  \
 
 airmas.o                    : airmas.F
 
+alpha_rno3.o                : alpha_rno3.F
+
 anthroems.o                 : anthroems.F                                    \
                               edgar_mod.o             future_emissions_mod.o \
                               geia_mod.o              scale_anthro_mod.o     \

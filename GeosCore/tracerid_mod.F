@@ -283,6 +283,7 @@
       INTEGER            :: IDAPIO2, IDLIMO2, IDOLNN,  IDOLND
 
       ! C1-C3 RONO2 (jaf, 4/15/16)
+      INTEGER            :: IDMO2,   IDETO2,  IDA3O2 
       INTEGER            :: IDMENO3, IDETNO3, IDPRNO3
 
       INTEGER            :: IDDRYNO2,   IDDRYO3,   IDDRYPAN
@@ -3612,6 +3613,10 @@
          IF ( NAMEGAS(I) == 'MOH'    ) IDMOH    = I 
          IF ( NAMEGAS(I) == 'API '   ) IDAPI    = I
          IF ( NAMEGAS(I) == 'LIM '   ) IDLIM    = I
+
+         IF ( NAMEGAS(I) == 'MO2'    ) IDMO2   = I
+         IF ( NAMEGAS(I) == 'ETO2'   ) IDETO2   = I
+         IF ( NAMEGAS(I) == 'A3O2'   ) IDA3O2   = I
          ! ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
          IF ( NAMEGAS(I) == 'DRYAPAN' )  IDDRYAPAN  = I
