@@ -5908,6 +5908,42 @@ c$$$            FLAG(NUMDEP)    = 2
             AIROSOL(NUMDEP) = .FALSE.
             FLAG(NUMDEP)    = 4
 
+         ELSE IF ( N == IDTMENO3 ) THEN
+            ! Scale based on molecular weight per Nguyen et al, 2014
+            NUMDEP          = NUMDEP + 1
+            NTRAIND(NUMDEP) = IDTMENO3
+            NDVZIND(NUMDEP) = DRYDISOPN
+            DEPNAME(NUMDEP) = 'MENO3'
+            HSTAR(NUMDEP)   = 0d0
+            F0(NUMDEP)      = 0d0
+            XMW(NUMDEP)     = 77d-3
+            AIROSOL(NUMDEP) = .FALSE.
+            FLAG(NUMDEP)    = 4
+
+         ELSE IF ( N == IDTETNO3 ) THEN
+            ! Scale based on molecular weight per Nguyen et al, 2014
+            NUMDEP          = NUMDEP + 1
+            NTRAIND(NUMDEP) = IDTETNO3
+            NDVZIND(NUMDEP) = DRYDISOPN
+            DEPNAME(NUMDEP) = 'ETNO3'
+            HSTAR(NUMDEP)   = 0d0
+            F0(NUMDEP)      = 0d0
+            XMW(NUMDEP)     = 91d-3
+            AIROSOL(NUMDEP) = .FALSE.
+            FLAG(NUMDEP)    = 4
+
+         ELSE IF ( N == IDTPRNO3 ) THEN
+            ! Scale based on molecular weight per Nguyen et al, 2014
+            NUMDEP          = NUMDEP + 1
+            NTRAIND(NUMDEP) = IDTPRNO3
+            NDVZIND(NUMDEP) = DRYDISOPN
+            DEPNAME(NUMDEP) = 'PRNO3'
+            HSTAR(NUMDEP)   = 0d0
+            F0(NUMDEP)      = 0d0
+            XMW(NUMDEP)     = 105d-3
+            AIROSOL(NUMDEP) = .FALSE.
+            FLAG(NUMDEP)    = 4
+
          !----------------------------------
          ! SEAC4RS SOA tracers (jaf, 6/24/13)
          !----------------------------------
