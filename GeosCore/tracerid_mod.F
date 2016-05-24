@@ -283,8 +283,8 @@
       INTEGER            :: IDAPIO2, IDLIMO2, IDOLNN,  IDOLND
 
       ! C1-C3 RONO2 (jaf, 4/15/16)
-      INTEGER            :: IDMO2,   IDETO2,  IDA3O2 
-      INTEGER            :: IDMENO3, IDETNO3, IDPRNO3
+      INTEGER            :: IDMO2,   IDETO2,  IDA3O2,   IDB3O2 
+      INTEGER            :: IDMENO3, IDETNO3, IDNPRNO3, IDIPRNO3
 
       INTEGER            :: IDDRYNO2,   IDDRYO3,   IDDRYPAN
       INTEGER            :: IDDRYHNO3,  IDDRYHNO2, IDDRYH2O2
@@ -4870,7 +4870,8 @@
       IDHONIT   = 0
       IDMENO3   = 0
       IDETNO3   = 0
-      IDPRNO3   = 0
+      IDNPRNO3  = 0
+      IDIPRNO3  = 0
 
       ! GEOS-CHEM Tracer ID #'s
       IDTNO      = 0

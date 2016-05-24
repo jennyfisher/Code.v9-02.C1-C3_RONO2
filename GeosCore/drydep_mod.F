@@ -5932,12 +5932,26 @@ c$$$            FLAG(NUMDEP)    = 2
             AIROSOL(NUMDEP) = .FALSE.
             FLAG(NUMDEP)    = 4
 
+         ! Lumped species
          ELSE IF ( N == IDTPRNO3 ) THEN
             ! Scale based on molecular weight per Nguyen et al, 2014
+
+            ! First species: NPRNO3
             NUMDEP          = NUMDEP + 1
             NTRAIND(NUMDEP) = IDTPRNO3
             NDVZIND(NUMDEP) = DRYDISOPN
-            DEPNAME(NUMDEP) = 'PRNO3'
+            DEPNAME(NUMDEP) = 'NPRNO3'
+            HSTAR(NUMDEP)   = 0d0
+            F0(NUMDEP)      = 0d0
+            XMW(NUMDEP)     = 105d-3
+            AIROSOL(NUMDEP) = .FALSE.
+            FLAG(NUMDEP)    = 4
+
+            ! Second species: IPRNO3
+            NUMDEP          = NUMDEP + 1
+            NTRAIND(NUMDEP) = IDTPRNO3
+            NDVZIND(NUMDEP) = DRYDISOPN
+            DEPNAME(NUMDEP) = 'IPRNO3'
             HSTAR(NUMDEP)   = 0d0
             F0(NUMDEP)      = 0d0
             XMW(NUMDEP)     = 105d-3

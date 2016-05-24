@@ -6010,6 +6010,43 @@
      &                                + ( SPACING             * 37 )
                         NTRAC(44)     = NTRAC(44) + 1
 
+                     CASE( 'IPRNO3' )
+
+                        !-----------------------------------------------
+                        ! Drydep flux: IPRNO3.  Use the same info as
+                        ! for PRNO3 but save as w/ index N_TRACERS+4.
+                        !-----------------------------------------------
+                        T             = IDTPRNO3
+                        NAME (N,44)   = TRIM( Input_Opt%DEPNAME(N) ) // 
+     &                       'df'
+                        FNAME(N,44)   = TRIM( Input_Opt%DEPNAME(N) ) // 
+     &                       ' drydep flux'
+                        MWT  (N,44)   = Input_Opt%TRACER_MW_KG(T) 
+                        MOLC (N,44)   = INT(Input_Opt%TRACER_COEFF(T,1))
+                        SCALE(N,44)   = 1.0e0
+                        UNIT (N,44)   = 'molec/cm2/s'
+                        INDEX(N,44)   = ( Input_Opt%N_TRACERS + 4  )
+     &                                + ( SPACING             * 36 )
+                        NTRAC(44)     = NTRAC(44) + 1
+                        
+                        !--------------------------------------------------
+                        ! Drydep velocity: IPRNO3.  Use the same info as
+                        ! for PRNO3 but save as w/ index N_TRACERS+4.
+                        !--------------------------------------------------
+                        T             = IDTPRNO3
+                        NN            = N + Input_Opt%NUMDEP
+                        NAME (NN,44)  = TRIM( Input_Opt%DEPNAME(N) ) // 
+     &                                  'dv'
+                        FNAME(NN,44)  = TRIM( Input_Opt%DEPNAME(N) ) // 
+     &                                  ' drydep velocity'
+                        MWT  (NN,44)  = Input_Opt%TRACER_MW_KG(T) 
+                        MOLC (NN,44)  = INT(Input_Opt%TRACER_COEFF(T,1))
+                        SCALE(NN,44)  = 1.0e0
+                        UNIT (NN,44)  = 'cm/s'
+                        INDEX(NN,44)  = ( Input_Opt%N_TRACERS + 4  )
+     &                                + ( SPACING             * 37 )
+                        NTRAC(44)     = NTRAC(44) + 1
+
                      CASE DEFAULT
 
                         !-----------------------------------------------
@@ -6188,6 +6225,43 @@
                      SCALE(NN,44)  = 1.0e0
                      UNIT (NN,44)  = 'cm/s'
                      INDEX(NN,44)  = ( Input_Opt%N_TRACERS + 3  )
+     &                             + ( SPACING             * 37 )
+                     NTRAC(44)     = NTRAC(44) + 1
+
+                  CASE( 'IPRNO3' )
+
+                     !-----------------------------------------------
+                     ! Drydep flux: IPRNO3.  Use the same info as
+                     ! for PRNO3 but save as w/ index N_TRACERS+4.
+                     !-----------------------------------------------
+                     T             = IDTPRNO3
+                     NAME (N,44)   = TRIM( Input_Opt%DEPNAME(N) ) // 
+     &                    'df'
+                     FNAME(N,44)   = TRIM( Input_Opt%DEPNAME(N) ) // 
+     &                    ' drydep flux'
+                     MWT  (N,44)   = Input_Opt%TRACER_MW_KG(T) 
+                     MOLC (N,44)   = INT(Input_Opt%TRACER_COEFF(T,1))
+                     SCALE(N,44)   = 1.0e0
+                     UNIT (N,44)   = 'molec/cm2/s'
+                     INDEX(N,44)   = ( Input_Opt%N_TRACERS + 4  )
+     &                             + ( SPACING             * 36 )
+                     NTRAC(44)     = NTRAC(44) + 1
+                     
+                     !--------------------------------------------------
+                     ! Drydep velocity: IPRNO3.  Use the same info as
+                     ! for PRNO3 but save as w/ index N_TRACERS+4.
+                     !--------------------------------------------------
+                     T             = IDTPRNO3
+                     NN            = N + Input_Opt%NUMDEP
+                     NAME (NN,44)  = TRIM( Input_Opt%DEPNAME(N) ) // 
+     &                               'dv'
+                     FNAME(NN,44)  = TRIM( Input_Opt%DEPNAME(N) ) // 
+     &                               ' drydep velocity'
+                     MWT  (NN,44)  = Input_Opt%TRACER_MW_KG(T) 
+                     MOLC (NN,44)  = INT(Input_Opt%TRACER_COEFF(T,1))
+                     SCALE(NN,44)  = 1.0e0
+                     UNIT (NN,44)  = 'cm/s'
+                     INDEX(NN,44)  = ( Input_Opt%N_TRACERS + 4  )
      &                             + ( SPACING             * 37 )
                      NTRAC(44)     = NTRAC(44) + 1
 
