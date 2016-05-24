@@ -179,6 +179,7 @@
       LOGICAL :: LQFED_FINN      ! Use QFED&FINN biomass burning?
       LOGICAL :: LPECCA          ! PCEEA BVOC emission model (mpb,2009)
       LOGICAL :: LRETRO          ! RETRO anthropogenic emissions (wfr, 3/8/11)
+      LOGICAL :: LTZOMPA         ! Tzompa et al. 2016 C2H6 and C3H8
 ![eml
       LOGICAL :: LHIST           ! Use historical emissions?
 !eml]

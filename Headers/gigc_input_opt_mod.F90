@@ -133,6 +133,7 @@ MODULE GIGC_Input_Opt_Mod
      LOGICAL                     :: LNEI11CARB
      LOGICAL                     :: LSCALEONROAD
      LOGICAL                     :: LRETRO
+     LOGICAL                     :: LTZOMPA
      LOGICAL                     :: LNEI99
      LOGICAL                     :: LICARTT
      LOGICAL                     :: LVISTAS
@@ -809,6 +810,7 @@ CONTAINS
     Input_Opt%LNEI11CARB             = .FALSE.
     Input_Opt%LSCALEONROAD           = .FALSE.
     Input_Opt%LRETRO                 = .FALSE.
+    Input_Opt%LTZOMPA                = .FALSE.
     Input_Opt%LNEI99                 = .FALSE.
     Input_Opt%LICARTT                = .FALSE.
     Input_Opt%LVISTAS                = .FALSE.

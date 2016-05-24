@@ -26,12 +26,14 @@
       USE EDGAR_MOD,          ONLY : GET_EDGAR_TODN
       USE EMEP_MOD,           ONLY : GET_EMEP_ANTHRO,  GET_EUROPE_MASK
       USE EPA_NEI_MOD,        ONLY : GET_EPA_ANTHRO,   GET_USA_MASK
-      USE GRID_MOD,           ONLY : GET_AREA_CM2
+      USE GRID_MOD,           ONLY : GET_AREA_CM2, GET_XEDGE, GET_YEDGE
       USE RETRO_MOD,          ONLY : GET_RETRO_ANTHRO
       USE C2H6_MOD,           ONLY : GET_C2H6_ANTHRO
       USE NEI2005_ANTHRO_MOD, ONLY : GET_NEI2005_ANTHRO
       USE NEI2008_ANTHRO_MOD, ONLY : GET_NEI2008_ANTHRO
       USE NEI2011_ANTHRO_MOD, ONLY : GET_NEI2011_ANTHRO
+      USE TURNER_FLUX_MOD,    ONLY : GET_TURNER_ANTHRO
+!      USE TURNER_FLUX_MOD,    ONLY : GET_TURNER_BIOFUEL
       USE NEI2005_ANTHRO_MOD, ONLY : NEI05_MASK => USA_MASK
       USE LOGICAL_MOD,        ONLY : LICOADSSHIP !(cklee, 6/30/09)
       USE RCP_MOD,            ONLY : GET_RCP_EMISSION
@@ -42,9 +44,9 @@
       USE TIME_MOD,           ONLY : GET_TS_EMIS
       USE TIME_MOD,           ONLY : GET_DAY_OF_WEEK_LT
       USE TIME_MOD,           ONLY : GET_HOUR
-      USE TRACERID_MOD,       ONLY : IDENO,    IDEO3,    IDEHNO3
-      USE TRACERID_MOD,       ONLY : IDTCO,    IDTHNO3
-      USE TRACERID_MOD,       ONLY : IDTC2H6,  IDTNO2, IDTNO
+      USE TRACERID_MOD,       ONLY : IDENO,    IDEO3,   IDEHNO3
+      USE TRACERID_MOD,       ONLY : IDTCO,    IDTHNO3, IDTC3H8
+      USE TRACERID_MOD,       ONLY : IDTC2H6,  IDTNO2,  IDTNO
       USE TRACER_MOD,         ONLY : TRACER_NAME
       USE VISTAS_ANTHRO_MOD,  ONLY : GET_VISTAS_ANTHRO
       USE ICOADS_SHIP_MOD,    ONLY : GET_ICOADS_SHIP !(cklee, 7/09/09)
@@ -180,6 +182,8 @@
       REAL*8  :: CAC,   SHIP,    VISTAS, NEI05, NEI08, NEI11
       REAL*8  :: RETRO
       REAL*8  :: C2H6_ANTHRO
+      REAL*8  :: TZOMPA, X1, X2, Y1, Y2
+      LOGICAL :: IS_S_MEX
       ! 10/24/12, ckeller: NOX diurnal scale factors fix:
       INTEGER :: NOXHOUR
       ! 06/26/13, skim: Passive Tracers implemented by jaf
@@ -203,6 +207,7 @@
       LOGICAL :: LNEI08
       LOGICAL :: LNEI11
       LOGICAL :: LRETRO
+      LOGICAL :: LTZOMPA
       LOGICAL :: LHIST
       LOGICAL :: LRCP
       LOGICAL :: LRCPSHIP
@@ -231,6 +236,7 @@
       LNEI08          = Input_Opt%LNEI08
       LNEI11          = Input_Opt%LNEI11
       LRETRO          = Input_Opt%LRETRO
+      LTZOMPA         = Input_Opt%LTZOMPA
       LHIST           = Input_Opt%LHIST
       LRCP            = Input_Opt%LRCP
       LRCPSHIP        = Input_Opt%LRCPSHIP
@@ -884,6 +890,47 @@
          ENDIF
   
          !--------------------------------------------------------------
+         ! Get C2H6 & C3H8 by scaling Turner CH4 fluxes
+         !   inventory of Tzompa et al. 2016
+         !--------------------------------------------------------------
+
+         ! Currently overwrites RETRO, Xiao for C2H6 & C3H8
+         IF ( LTZOMPA ) THEN
+
+            ! Kludge for Tzompa -- need to be zero over S. Mexico
+            IS_S_MEX = .FALSE.
+            X1 = GET_XEDGE(I,J,1)
+            X2 = GET_XEDGE(I+1,J,1)
+            Y1 = GET_YEDGE(I,J,1)
+            Y2 = GET_YEDGE(I,J+1,1)
+            IF ( (X1 >= -117.5) .and. (X2 <= -87.5) .and.
+     &           (Y1 >=   15.0) .and. (Y2 <=  25.0) ) IS_S_MEX = .TRUE.
+
+            ! Check that either tracer is C3H8 OR
+            ! tracer is C2H6 and we are not in Asia or Mexico
+            IF ( (NN == IDTC3H8) .or.
+     &           ( (NN == IDTC2H6) .and. 
+     &             (.not. IS_S_MEX) .and.
+     &             (GET_SE_ASIA_MASK( I, J ) == 0d0) .and.
+     &             (GET_BRAVO_MASK( I, J )   == 0d0) ) ) THEN
+
+               TZOMPA = GET_TURNER_ANTHRO( I, J, NN )
+
+               ! Apply time-of-day factor
+               TZOMPA = TZOMPA * TODX
+
+!! KLUDGE! For now add biofuel emissions to oil & gas emissions
+!               TZOMPA = TZOMPA + GET_TURNER_BIOFUEL( I, J, NN )
+!!
+
+               ! Convert from molC/cm2/s to kg/box/timestep in order
+               ! to be in the proper units for EMISRR array
+               EMX(1) = TZOMPA * ( DTSRCE * AREA_CM2 ) / XNUMOL(NN)
+
+            ENDIF
+         ENDIF
+  
+         !--------------------------------------------------------------
          ! Get CO & hydrocarbons emissions from RCP inventory
          ! (cdh, 10/14/11)
          !--------------------------------------------------------------
@@ -1005,7 +1052,15 @@
                   ENDIF
                ENDDO
             ENDIF 
-         ELSEIF (  LNEI11 .and. NN .ne. IDTC2H6 ) THEN
+
+         ! Update to use Zitely Tzompa's C2H6 inventory, which includes
+         ! NEI2011 multiplied by 1.4
+         !ELSEIF (  LNEI11 .and. NN .ne. IDTC2H6 ) THEN
+!!! TEMPORARY KLUDGE! Don't use NEI11 for C3H8
+         ELSEIF (  LNEI11 .and. NN .ne. IDTC3H8 ) THEN
+         !ELSEIF (  LNEI11 ) THEN
+!!!!
+
              ! If we are over the USA ...
             IF ( USA_MASK( I, J ) > 0d0 ) THEN
                ! Flag for weekday or weekend for NEI/VISTAS emissions
@@ -1013,12 +1068,20 @@
                ! Loop over all of the emission levels
                ! For now lump levels together (phs, 10/20/09)
                DO LL = 1, NOXLEVELS 
+
+                  ! Don't use NEI2011 for C2H6 unless we are using Tzompa
+                  IF ( NN == IDTC2H6 .and. .not. LTZOMPA ) EXIT
+
                   IF ( LL .le. 6 ) THEN !NEI11 has 6 levels
                      ! Get EPA/NEI emissions               
                      NEI11 = GET_NEI2011_ANTHRO( I, J, LL,HOURNEI,NN )
 
                      ! -1 indicates tracer NN does not have EPA/NEI emissions
                      IF ( NEI11 < 0d0 )  EXIT
+
+                     ! Apply Tzompa scale factor for C2H6
+                     IF ( LTZOMPA .and. NN == IDTC2H6 ) 
+     &                  NEI11 = NEI11 * 1.4d0
 
                      ! Convert from molec/cm2/s to kg/box/timestep in order
                      ! to be in the proper units for EMISRR array
@@ -1042,6 +1105,9 @@
                ! Get STREETS emissions 
                STREETS = GET_STREETS_ANTHRO( I, J, NN, 
      &                                       MOLEC_CM2_S=.TRUE. )
+
+               ! KLUDGE: Set Streets C3H8 to -1d0 when using LTZOMPA
+               IF ( (NN == IDTC3H8) .and. (LTZOMPA) ) STREETS=-1d0
          
                ! -1 indicates tracer NN does not have BRAVO emissions
                IF ( .not. ( STREETS < 0d0 ) ) THEN

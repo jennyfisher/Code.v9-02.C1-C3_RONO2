@@ -270,6 +270,8 @@
       USE TRACERID_MOD,         ONLY : IDBFC2H2,IDBFGLYC,IDBFHAC
 ![eml 
       USE TIME_MOD,             ONLY : GET_HISTYR
+      USE TURNER_FLUX_MOD,      ONLY : GET_TURNER_BIOFUEL
+      USE USA_MASK_MOD,         ONLY : USA_MASK
       USE REGRID_A2A_MOD,       ONLY : DO_REGRID_A2A
 !eml]
       ! for CAC / BRAVO emissions fix (ckeller, 11/15/12)
@@ -289,7 +291,7 @@
 
       ! SEAC4RS tracers (jaf, 6/13/13)
       ! Remove passive tracers (skim, 5/23/14)
-      ! USE GRID_MOD,             ONLY : GET_XMID,   GET_YMID
+      USE GRID_MOD,             ONLY : GET_XEDGE,   GET_YEDGE
       ! USE TRACERID_MOD,         ONLY : IDTPCOFNE,  IDTPCOFSE
       ! USE TRACERID_MOD,         ONLY : IDTPCOFW,   IDTPCOFRW
       ! USE TRACERID_MOD,         ONLY : IDBFPCOFNE, IDBFPCOFSE
@@ -325,6 +327,8 @@
       REAL*4                        :: ARRAY(IIPAR,JJPAR,1)
       REAL*8,  SAVE                 :: MOLWT(NBFMAX)
       REAL*8                        :: TOTAL, BXHEIGHT_CM, EPA_NEI
+      REAL*8                        :: TZOMPA, X1, X2, Y1, Y2
+      LOGICAL                       :: IS_S_MEX
       CHARACTER(LEN=255)            :: FILENAME 
 ![eml
       CHARACTER(LEN=4  )            :: CHISTYR
@@ -358,7 +362,9 @@
       LOGICAL                       :: LNEI99
       LOGICAL                       :: LSTREETS
       LOGICAL                       :: LRETRO
+      LOGICAL                       :: LTZOMPA
       LOGICAL                       :: LNEI05
+      LOGICAL                       :: LNEI11
       LOGICAL                       :: LHIST
       LOGICAL                       :: LRCP
       LOGICAL                       :: ITS_A_H2HD_SIM
@@ -376,7 +382,9 @@
       LNEI99         = Input_Opt%LNEI99
       LSTREETS       = Input_Opt%LSTREETS
       LRETRO         = Input_Opt%LRETRO
+      LTZOMPA        = Input_Opt%LTZOMPA
       LNEI05         = Input_Opt%LNEI05
+      LNEI11         = Input_Opt%LNEI11
       LHIST          = Input_Opt%LHIST
       LRCP           = Input_Opt%LRCP
       ITS_A_H2HD_SIM = Input_Opt%ITS_A_H2HD_SIM
@@ -1005,6 +1013,7 @@
 !$OMP PARALLEL DO
 !$OMP+DEFAULT( SHARED )
 !$OMP+PRIVATE( I, J, BXHEIGHT_CM, N, NN, EPA_NEI, DOW_LT, WEEKDAY, X, Y)
+!$OMP+PRIVATE( TZOMPA, IS_S_MEX, X1, X2, Y1, Y2 )
       DO J = 1, JJPAR
       DO I = 1, IIPAR
 
@@ -1049,6 +1058,43 @@
 
                   BIOFUEL(N,I,J) = 0.d0
 
+               ENDIF
+            ENDIF
+
+            !-----------------------------------------------------------
+            ! For now, we are including Turner CH4-derived biofuel
+            ! C2H6 & C3H8 emissions in emfossil.F (Tzompa)
+            !-----------------------------------------------------------
+            IF ( LTZOMPA ) THEN
+
+               ! Kludge for Tzompa -- need to be zero over S. Mexico
+               IS_S_MEX = .FALSE.
+               X1 = GET_XEDGE(I,J,1)
+               X2 = GET_XEDGE(I+1,J,1)
+               Y1 = GET_YEDGE(I,J,1)
+               Y2 = GET_YEDGE(I,J+1,1)
+               IF ((X1 >= -117.5) .and. (X2 <= -87.5) .and.
+     &             (Y1 >=   15.0) .and. (Y2 <=  25.0)) IS_S_MEX = .TRUE.
+
+               ! Check that either tracer is C3H8 OR
+               ! tracer is C2H6 and we are not in Asia or Mexico
+               IF ( (NN == IDTC3H8) .or.
+     &              ( (NN == IDTC2H6) .and. 
+     &                (.not. IS_S_MEX) .and.
+     &                (GET_SE_ASIA_MASK( I, J ) == 0d0) .and.
+     &                (GET_BRAVO_MASK( I, J )   == 0d0) ) ) THEN
+
+                  ! Biofuel emissions in molec/cm2/s
+                  TZOMPA = GET_TURNER_BIOFUEL( I, J, NN )
+
+                  ! Convert [molec/cm2/s] to [molec/cm3/s]
+                  BIOFUEL(N,I,J) = TZOMPA / BXHEIGHT_CM
+
+               ! Biofuel included w/ anthro in NEI2011 - zero
+               ! Eventually we will do this for C2H6 and C3H8
+               ELSE IF ( LNEI11 .and. (NN==IDTC2H6) .and.
+     &                   (USA_MASK(I, J) > 0d0)    ) THEN
+                  BIOFUEL(N,I,J) = 0.d0
                ENDIF
             ENDIF
 

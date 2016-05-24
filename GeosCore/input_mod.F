@@ -2339,6 +2339,10 @@
       CALL SPLIT_ONE_LINE( SUBSTRS, N, 1, 'read_emissions_menu:11' )
       READ( SUBSTRS(1:N), * ) LRETRO
 
+      ! Use TZOMPA inventory?
+      CALL SPLIT_ONE_LINE( SUBSTRS, N, 1, 'read_emissions_menu:11' )
+      READ( SUBSTRS(1:N), * ) LTZOMPA
+
       ! AEIC aircraft emissions
       CALL SPLIT_ONE_LINE( SUBSTRS, N, 1, 'read_emissions_menu:12' )
       READ( SUBSTRS(1:N), * ) LAEIC
@@ -2574,6 +2578,7 @@
       LSCALEONROAD      = ( LSCALEONROAD   .and. LANTHRO   )
       LSCALE2MASAGE     = ( LSCALE2MASAGE  .and. LANTHRO   )
       LRETRO            = ( LRETRO         .and. LANTHRO   )
+      LTZOMPA           = ( LTZOMPA        .and. LANTHRO   )
       LNEI99            = ( LNEI99         .and. LANTHRO   )
       LICARTT           = ( LICARTT        .and. LANTHRO   )
       LVISTAS           = ( LVISTAS        .and. LANTHRO   )
@@ -2650,7 +2655,13 @@
      &        CALL ERROR_STOP( 'INPUT.GEOS WARNING!! '//
      &           'Choose either RCP or RETRO for global emissions', 
      &           'READ_EMISSIONS_MENU' )
-
+ 
+         ! Force user to choose just 1 global inventory
+         IF ( LTZOMPA ) 
+     &        CALL ERROR_STOP( 'INPUT.GEOS WARNING!! '//
+     &           'Choose either RCP or TZOMPA for global emissions', 
+     &           'READ_EMISSIONS_MENU' )
+ 
          ! Force user to choose just 1 global ship inventory
          IF ( LEDGARSHIP .OR. LICOADSSHIP ) 
      &        CALL ERROR_STOP( 'INPUT.GEOS WARNING!! '//
@@ -3057,6 +3068,7 @@
       Input_Opt%LNEI11         = LNEI11
       Input_Opt%LNEI11CARB     = LNEI11CARB
       Input_Opt%LRETRO         = LRETRO
+      Input_Opt%LTZOMPA        = LTZOMPA
       Input_Opt%LNEI99         = LNEI99
       Input_Opt%LICARTT        = LICARTT
       Input_Opt%LVISTAS        = LVISTAS
@@ -3137,6 +3149,7 @@
         WRITE( 6, 100 ) '  Use EPA/NEI 2011 OC/BC    : ', LNEI11CARB
         WRITE( 6, 100 ) '  Scale NEI11 onroad emissions: ', LSCALEONROAD
         WRITE( 6, 100 ) '  Use RETRO emissions       : ', LRETRO
+        WRITE( 6, 100 ) '  Use TZOMPA C2H6/C3H8?     : ', LTZOMPA
         WRITE( 6, 100 ) '  Use AEIC emissions        : ', LAEIC
         WRITE( 6, 100 ) '  Use RCP emissions         : ', LRCP
         WRITE( 6, 130 ) '      RCP scenario?         : ', TRIM(RCPNAME)
@@ -8815,6 +8828,7 @@
       LPREINDHG      = .FALSE.
       USE_OLSON_2001 = .FALSE.
       LRETRO         = .FALSE.  !(wfr, 3/8/11)
+      LTZOMPA        = .FALSE.
       LRCP           = .FALSE.  !(cdh, 10/18/11)
       LRCPSHIP       = .FALSE.  !(cdh, 10/18/11)
       LRCPAIR        = .FALSE.  !(cdh, 10/18/11)

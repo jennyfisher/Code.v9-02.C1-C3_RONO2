@@ -347,7 +347,8 @@ biofuel_mod.o               : biofuel_mod.F                                  \
                               diag_mod.o              emep_mod.o             \
                               epa_nei_mod.o           future_emissions_mod.o \
                               logical_mod.o           streets_anthro_mod.o   \
-                              tracerid_mod.o          tracer_mod.o
+                              tracerid_mod.o          tracer_mod.o           \
+                              turner_flux_mod.o
 
 biomass_mod.o               : biomass_mod.F                                  \
                               diag_mod.o              gc_biomass_mod.o       \
@@ -615,7 +616,7 @@ emfossil.o                  : emfossil.F                                     \
 			      retro_mod.o             c2h6_mod.o             \
                               nei2008_anthro_mod.o    rcp_mod.o              \
 			      nei2011_anthro_mod.o    diag49_mod.o           \
-			      usa_mask_mod.o
+			      usa_mask_mod.o          turner_flux_mod.o
 
 emissdr.o                   : emissdr.F                                      \
                               acetone_mod.o           aeic_mod.o             \
@@ -643,7 +644,7 @@ emissions_mod.o             : emissions_mod.F                                \
                               streets_anthro_mod.o    sulfate_mod.o          \
                               tagged_co_mod.o         tracerid_mod.o         \
                               vistas_anthro_mod.o     nei2008_anthro_mod.o   \
-			      nei2011_anthro_mod.o
+			      nei2011_anthro_mod.o    turner_flux_mod.o
 
 epa_nei_mod.o               : epa_nei_mod.F                                  \
                               future_emissions_mod.o  scale_anthro_mod.o     \
@@ -1168,6 +1169,10 @@ transport_mod.o             : transport_mod.F                                \
 tropopause_mod.o            : tropopause_mod.F                               \
                               comode_mod.o            diag_mod.o             \
                               logical_mod.o
+
+turner_flux_mod.o           : turner_flux_mod.F90                            \
+                              logical_mod.o           tracerid_mod.o         \
+                              tracer_mod.o
 
 update.o                    : update.F
 

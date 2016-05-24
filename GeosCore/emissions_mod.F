@@ -118,6 +118,7 @@
       USE NEI2005_ANTHRO_MOD,     ONLY : EMISS_NEI2005_ANTHRO_05x0666
       USE NEI2008_ANTHRO_MOD,     ONLY : EMISS_NEI2008_ANTHRO
       USE NEI2011_ANTHRO_MOD,     ONLY : EMISS_NEI2011_ANTHRO
+      USE TURNER_FLUX_MOD,        ONLY : EMISS_TURNER_FLUX
       USE PARANOX_MOD,            ONLY : READ_PARANOX_LUT
       USE POPS_MOD,               ONLY : EMISSPOPS  !(clf, 2/1/2011)
       USE RCP_MOD,                ONLY : LOAD_RCP_EMISSIONS !cdh
@@ -251,6 +252,7 @@
       LOGICAL :: LNEI05
       LOGICAL :: LNEI08
       LOGICAL :: LNEI11
+      LOGICAL :: LTZOMPA
       LOGICAL :: LARCSHIP
       LOGICAL :: LEDGARSHIP
       LOGICAL :: LEMEPSHIP
@@ -298,6 +300,7 @@
       LNEI05             = Input_Opt%LNEI05
       LNEI08             = Input_Opt%LNEI08
       LNEI11             = Input_Opt%LNEI11
+      LTZOMPA            = Input_Opt%LTZOMPA
       LARCSHIP           = Input_Opt%LARCSHIP
       LEDGARSHIP         = Input_Opt%LEDGARSHIP
       LEMEPSHIP          = Input_Opt%LEMEPSHIP
@@ -476,6 +479,13 @@
          CALL EMISSC2H6
      &      ( am_I_Root, Input_Opt, State_Met, State_Chm, RC )
 
+         ! Read Turner CH4 derived C2H6 & C3H8
+         ! Time invariant (oil/gas, biofuel) so read once per year
+         IF ( LTZOMPA .AND. ITS_A_NEW_YEAR() ) THEN
+            CALL EMISS_TURNER_FLUX(
+     &           am_I_Root, Input_Opt, State_Chm, RC )
+         ENDIF
+            
          ! NOx-Ox-HC (w/ or w/o aerosols)
          CALL EMISSDR
      &      ( am_I_Root, Input_Opt, State_Met, State_Chm, RC )
@@ -789,6 +799,12 @@
          CALL EMISSC2H6
      &      ( am_I_Root, Input_Opt, State_Met, State_Chm, RC )
 
+         ! Read Turner CH4 derived C2H6 & C3H8  emissions every day
+         IF ( LTZOMPA .AND. ITS_A_NEW_DAY() ) THEN
+            CALL EMISS_TURNER_FLUX(
+     &           am_I_Root, Input_Opt, State_Chm, RC )
+         ENDIF
+            
       ELSE IF ( ITS_A_CH4_SIM ) THEN
 
          !--------------------
