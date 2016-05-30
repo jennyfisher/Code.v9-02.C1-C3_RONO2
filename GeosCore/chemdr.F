@@ -258,6 +258,7 @@
       ! SAVEd variables
       LOGICAL, SAVE :: FIRSTCHEM   = .TRUE.
       INTEGER, SAVE :: CH4_YEAR  = -1
+      INTEGER, SAVE :: CH4_MONTH = -1
       INTEGER, SAVE :: DATE_PREV = -1
 
       ! To use CSPEC_FULL restart (dkh, 02/12/09) 
@@ -470,7 +471,9 @@
          !---------------------------------
          ! Set global concentration of CH4
          !---------------------------------
-         IF ( ICH4 > 0 .and. ( CH4_YEAR /= GET_YEAR() ) ) THEN
+         IF ( ICH4 > 0 .and. 
+     &                       ( CH4_YEAR /= GET_YEAR() .or. 
+     &                         CH4_MONTH /= GET_MONTH() ) ) THEN
 
             ! If CH4 is a SMVGEAR II species, then call GET_GLOBAL_CH4
             ! to return the globally-varying CH4 conc. as a function of
@@ -485,12 +488,16 @@
                CH4_YEAR = GET_FUTURE_YEAR()
             ELSE
                CH4_YEAR = GET_YEAR()
+               CH4_MONTH = GET_MONTH()
             ENDIF
 
+! Use Lee Murray's surface CH4 implementation
+!            ! Get CH4 [ppbv] in 4 latitude bins for each year
+!            CALL GET_GLOBAL_CH4( CH4_YEAR,  .TRUE.,  C3090S,
+!     &                           C0030S,    C0030N,  C3090N, 
+!     &                           am_I_Root, Input_Opt        )
             ! Get CH4 [ppbv] in 4 latitude bins for each year
-            CALL GET_GLOBAL_CH4( CH4_YEAR,  .TRUE.,  C3090S,
-     &                           C0030S,    C0030N,  C3090N, 
-     &                           am_I_Root, Input_Opt        )
+            CALL GET_GLOBAL_CH4( am_I_Root, Input_Opt )
          ENDIF
 
          !-------------------------------

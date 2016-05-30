@@ -111,7 +111,8 @@
      &                               IYSAVE, IZSAVE,  JLOP,    PRESS3,  
      &                               REMIS,  T3,      TAREA,    CSPEC,
      &                               HPLUS_SAV,       NARAT_SAV, 
-     &                               SULRAT_SAV,      BISUL_SAV
+     &                               SULRAT_SAV,      BISUL_SAV,
+     &                               SURF_CH4
       USE DAO_MOD,            ONLY : IS_ICE
       USE DIAG_MOD,           ONLY : AD22,   LTJV, AD52
       USE DRYDEP_MOD,         ONLY : DEPSAV, NUMDEP, DEPNAME, SHIPO3DEP
@@ -453,22 +454,26 @@
             ! 1-D grid box index
             JLOOP = KLOOP + JLOOPLO
 
-            ! Grid-box latitude index
-            YLAT  = GET_YMID( IXSAVE(JLOOP), 
-     &                        IYSAVE(JLOOP), 
-     &                        IZSAVE(JLOOP)  )
-            
-            ! Pick the CH4 concentration [ppbv] for the proper lat bin
-            ! CH4 values are read in "chemdr.f" (outside the parallel loop)
-            IF ( YLAT < -30d0 ) THEN
-               CBLK(KLOOP,ICH4) = C3090S
-            ELSE IF ( YLAT >= -30d0 .and. YLAT < 0d0  ) THEN
-               CBLK(KLOOP,ICH4) = C0030S
-            ELSE IF ( YLAT >=   0d0 .and. YLAT < 30d0 ) THEN
-               CBLK(KLOOP,ICH4) = C0030N
-            ELSE
-               CBLK(KLOOP,ICH4) = C3090N
-            ENDIF
+! Replace with Lee Murray's code to use surface CH4
+!            ! Grid-box latitude index
+!            YLAT  = GET_YMID( IXSAVE(JLOOP), 
+!     &                        IYSAVE(JLOOP), 
+!     &                        IZSAVE(JLOOP)  )
+!            
+!            ! Pick the CH4 concentration [ppbv] for the proper lat bin
+!            ! CH4 values are read in "chemdr.f" (outside the parallel loop)
+!            IF ( YLAT < -30d0 ) THEN
+!               CBLK(KLOOP,ICH4) = C3090S
+!            ELSE IF ( YLAT >= -30d0 .and. YLAT < 0d0  ) THEN
+!               CBLK(KLOOP,ICH4) = C0030S
+!            ELSE IF ( YLAT >=   0d0 .and. YLAT < 30d0 ) THEN
+!               CBLK(KLOOP,ICH4) = C0030N
+!            ELSE
+!               CBLK(KLOOP,ICH4) = C3090N
+!            ENDIF
+
+            ! Assign column from surface concentration [ppbv]
+            CBLK(KLOOP,ICH4) = SURF_CH4( IXSAVE(JLOOP), IYSAVE(JLOOP) )
 
             ! Convert from [ppbv CH4] to [molec CH4/cm3]
             CBLK(KLOOP,ICH4) = CBLK(KLOOP,ICH4) *1d-9 * AIRDENS(JLOOP)

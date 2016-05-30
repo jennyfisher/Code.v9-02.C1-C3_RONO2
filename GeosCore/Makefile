@@ -722,7 +722,7 @@ geosfp_read_mod.o           : geosfp_read_mod.F90                            \
                               dao_mod.o               diag_mod.o
 
 get_global_ch4.o            : get_global_ch4.F                               \
-                              future_emissions_mod.o
+                              future_emissions_mod.o  comode_mod.o
 
 get_ndep_mod.o              : get_ndep_mod.F                                 \
                               tracerid_mod.o

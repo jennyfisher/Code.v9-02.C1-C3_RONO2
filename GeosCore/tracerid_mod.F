@@ -283,7 +283,7 @@
       INTEGER            :: IDAPIO2, IDLIMO2, IDOLNN,  IDOLND
 
       ! C1-C3 RONO2 (jaf, 4/15/16)
-      INTEGER            :: IDMO2,   IDETO2,  IDA3O2,   IDB3O2 
+      INTEGER            :: IDMO2,   IDETO2,  IDA3O2,   IDB3O2, IDCH4
       INTEGER            :: IDMENO3, IDETNO3, IDNPRNO3, IDIPRNO3
 
       INTEGER            :: IDDRYNO2,   IDDRYO3,   IDDRYPAN
@@ -525,6 +525,7 @@
 
       ! Add C1-C3 RONO2 tracers (jaf, 4/15/16)
       INTEGER            :: IDTMENO3, IDTETNO3, IDTPRNO3
+      INTEGER            :: IDTCH4
 
       ! For tagged Hg simulation
       INTEGER              :: N_Hg_CATS
@@ -1587,6 +1588,8 @@
                IDTETNO3  = N
             CASE ( 'PRNO3' )
                IDTPRNO3= N
+            CASE ( 'CH4' )
+               IDTCH4= N
 
             !--------------------------------
             ! Tagged Ox Tracers
@@ -3611,12 +3614,14 @@
          IF ( NAMEGAS(I) == 'MONX'   ) IDMONX   = I 
          IF ( NAMEGAS(I) == 'EOH'    ) IDEOH    = I 
          IF ( NAMEGAS(I) == 'MOH'    ) IDMOH    = I 
-         IF ( NAMEGAS(I) == 'API '   ) IDAPI    = I
-         IF ( NAMEGAS(I) == 'LIM '   ) IDLIM    = I
+         IF ( NAMEGAS(I) == 'API'    ) IDAPI    = I
+         IF ( NAMEGAS(I) == 'LIM'    ) IDLIM    = I
 
          IF ( NAMEGAS(I) == 'MO2'    ) IDMO2   = I
          IF ( NAMEGAS(I) == 'ETO2'   ) IDETO2   = I
          IF ( NAMEGAS(I) == 'A3O2'   ) IDA3O2   = I
+         IF ( NAMEGAS(I) == 'B3O2'   ) IDB3O2   = I
+         IF ( NAMEGAS(I) == 'CH4'    ) IDCH4    = I
          ! ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
          IF ( NAMEGAS(I) == 'DRYAPAN' )  IDDRYAPAN  = I
@@ -4872,6 +4877,9 @@
       IDETNO3   = 0
       IDNPRNO3  = 0
       IDIPRNO3  = 0
+      IDA3O2    = 0
+      IDB3O2    = 0
+      IDCH4     = 0
 
       ! GEOS-CHEM Tracer ID #'s
       IDTNO      = 0
@@ -5039,6 +5047,7 @@
       IDTMENO3  = 0
       IDTETNO3  = 0
       IDTPRNO3  = 0
+      IDTCH4    = 0
  
       ! SOAupdate: convert all POA/POG to 1 and 2 (hotp 10/11/09)
        !semivolpoa (hotp 8/24/09)

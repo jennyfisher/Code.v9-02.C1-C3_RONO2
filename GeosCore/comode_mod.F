@@ -58,6 +58,8 @@
       REAL*8,  ALLOCATABLE, PUBLIC :: VOLUME(:)      
       REAL*8,  ALLOCATABLE, PUBLIC :: WTAREA(:,:)
       REAL*8,  ALLOCATABLE, PUBLIC :: WERADIUS(:,:)
+      REAL*8,  ALLOCATABLE, PUBLIC :: SURF_CH4(:,:)
+      INTEGER,              PUBLIC :: CH4_YEAR
       ! Begin EAM additions
       REAL*8,  ALLOCATABLE, PUBLIC :: HPLUS_SAV(:,:,:)
       REAL*8,  ALLOCATABLE, PUBLIC :: SULRAT_SAV(:,:,:)
@@ -252,6 +254,10 @@
          IF ( AS /= 0 ) CALL ALLOC_ERR( 'WERADIUS' )
          WERADIUS = 0d0      
 
+         ALLOCATE( SURF_CH4( ILONG, ILAT ), STAT=AS )
+         IF ( AS /= 0 ) CALL ALLOC_ERR( 'SURF_CH4' )
+         SURF_CH4 = 0d0      
+
          ! Begin EAM additions
          ALLOCATE( HPLUS_SAV( IIPAR, JJPAR, LLPAR ) , STAT=AS )
          IF ( AS /= 0  ) CALL ALLOC_ERR( 'HPLUS_SAV' )
@@ -390,6 +396,7 @@
       IF ( ALLOCATED( VOLUME        ) ) DEALLOCATE( VOLUME        )  
       IF ( ALLOCATED( WTAREA        ) ) DEALLOCATE( WTAREA        )
       IF ( ALLOCATED( WERADIUS      ) ) DEALLOCATE( WERADIUS      )
+      IF ( ALLOCATED( SURF_CH4      ) ) DEALLOCATE( SURF_CH4      )
       IF ( ALLOCATED( HPLUS_SAV     ) ) DEALLOCATE( HPLUS_SAV     )
       IF ( ALLOCATED( SULRAT_SAV    ) ) DEALLOCATE( SULRAT_SAV    )
       IF ( ALLOCATED( NARAT_SAV     ) ) DEALLOCATE( NARAT_SAV     )

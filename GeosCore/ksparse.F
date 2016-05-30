@@ -538,11 +538,11 @@
        ENDIF
 !
  705   FORMAT('KSPARSE: ONE OF THE DIMENSIONS BELOW IS TOO SMALL:',/,
-     1        'DIMENSION: MXCOUNT2 = ',I5,' VARIABLE: ICNT     = ',I5,/,  
+     1        'DIMENSION: MXCOUNT2 = ',I6,' VARIABLE: ICNT     = ',I5,/,  
      2        'DIMENSION: MXCOUNT3 = ',I5,' VARIABLE: JCNT     = ',I5,/,  
      3        'DIMENSION: MXCOUNT3 = ',I5,' VARIABLE: KCNT     = ',I5,/,  
      4        'DIMENSION: MXCOUNT3 = ',I5,' VARIABLE: MCNT     = ',I5,/,  
-     5        'DIMENSION: MXCOUNT2 = ',I5,' VARIABLE: ICCOUNT  = ',I5,/,  
+     5        'DIMENSION: MXCOUNT2 = ',I6,' VARIABLE: ICCOUNT  = ',I5,/,  
      6        'DIMENSION: MXCOUNT3 = ',I5,' VARIABLE: JCCOUNT  = ',I5,/,  
      7        'DIMENSION: MXCOUNT3 = ',I5,' VARIABLE: KCCOUNT  = ',I5,/,  
      8        'DIMENSION: MXCOUNT3 = ',I5,' VARIABLE: MCCOUNT  = ',I5,/,  

@@ -3682,6 +3682,7 @@
 ! !USES:
 !
       USE CMN_SIZE_MOD
+      USE COMODE_MOD,         ONLY : CH4_YEAR
       USE ERROR_MOD,          ONLY : ERROR_STOP 
       USE GIGC_ErrCode_Mod
       USE GIGC_Input_Opt_Mod, ONLY : OptInput
@@ -3744,6 +3745,10 @@
       ! Turn on chemistry?
       CALL SPLIT_ONE_LINE( SUBSTRS, N, 1, 'read_chemistry_menu:1' )
       READ( SUBSTRS(1:N), * ) LCHEM
+
+      ! Year for methane, as prescribed from NOAA flasks?
+      CALL SPLIT_ONE_LINE( SUBSTRS, N, 1, 'read_chemistry_menu:1b' )
+      READ( SUBSTRS(1:N), * ) CH4_YEAR
 
       ! Turn on stratospheric chemistry?
       CALL SPLIT_ONE_LINE( SUBSTRS, N, 1, 'read_chemistry_menu:2' )

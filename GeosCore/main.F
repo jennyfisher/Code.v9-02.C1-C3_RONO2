@@ -983,6 +983,25 @@
          ENDIF
 
          !==============================================================
+         !         ***** S U R F A C E   B O U N D A R Y *****
+         !==============================================================
+
+         ! Prescribe methane concentrations throughout PBL
+         IF ( IDTCH4 > 0 ) THEN
+            IF ( prtDebug ) THEN 
+               CALL DEBUG_MSG( '### MAIN: Setting PBL Methane Conc')
+            ENDIF          
+            CALL GET_GLOBAL_CH4( am_I_Root )
+            DO I=1,IIPAR
+            DO J=1,JJPAR
+            DO K=1,GET_PBL_TOP_L(I,J)
+               STT(I,J,K,IDTCH4) = SURF_CH4(I,J) * 1e-9
+            ENDDO
+            ENDDO
+            ENDDO
+         ENDIF
+
+         !==============================================================
          !              ***** T R A N S P O R T *****
          !==============================================================
          IF ( ITS_TIME_FOR_DYN() ) THEN
