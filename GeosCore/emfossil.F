@@ -33,7 +33,6 @@
       USE NEI2008_ANTHRO_MOD, ONLY : GET_NEI2008_ANTHRO
       USE NEI2011_ANTHRO_MOD, ONLY : GET_NEI2011_ANTHRO
       USE TURNER_FLUX_MOD,    ONLY : GET_TURNER_ANTHRO
-!      USE TURNER_FLUX_MOD,    ONLY : GET_TURNER_BIOFUEL
       USE NEI2005_ANTHRO_MOD, ONLY : NEI05_MASK => USA_MASK
       USE LOGICAL_MOD,        ONLY : LICOADSSHIP !(cklee, 6/30/09)
       USE RCP_MOD,            ONLY : GET_RCP_EMISSION
@@ -858,6 +857,9 @@
 	    ! Get RETRO emissions
             RETRO = GET_RETRO_ANTHRO( I, J, NN )
 
+            ! KLUDGE: Set RETRO C3H8 to -1d0 when using LTZOMPA
+            IF ( (NN == IDTC3H8) .and. (LTZOMPA) ) RETRO = -1d0
+         
 	    ! -1 indicates tracer NN does not have RETRO emissions
             IF ( .not. ( RETRO < 0d0 ) ) THEN
 
@@ -918,10 +920,6 @@
 
                ! Apply time-of-day factor
                TZOMPA = TZOMPA * TODX
-
-!! KLUDGE! For now add biofuel emissions to oil & gas emissions
-!               TZOMPA = TZOMPA + GET_TURNER_BIOFUEL( I, J, NN )
-!!
 
                ! Convert from molC/cm2/s to kg/box/timestep in order
                ! to be in the proper units for EMISRR array

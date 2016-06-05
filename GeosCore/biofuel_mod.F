@@ -1049,8 +1049,11 @@
             !-----------------------------------------------------------
             IF ( LRETRO ) THEN
                IF ( (NN == IDTC2H2) .or. (NN == IDTC2H4) .or.
-     &              (NN == IDTPRPE) .or.
-     &              (NN == IDTC3H8) .or. (NN == IDTALK4) .or.
+! Don't do this for C3H8 if we are using Tzompa emissions! 
+!     &              (NN == IDTPRPE) .or.
+!     &              (NN == IDTC3H8) .or. (NN == IDTALK4) .or.
+     &              (NN == IDTPRPE) .or. (NN == IDTALK4) .or.
+     &              ((NN == IDTC3H8) .AND. (.NOT. LTZOMPA)) .or.
      &              (NN == IDTCH2O) .or. (NN == IDTALD2) .or. 
      &              (NN == IDTACET) .or. (NN == IDTMEK ) .or.
      &              (NN == IDTBENZ) .or. (NN == IDTTOLU) .or.
@@ -1062,8 +1065,7 @@
             ENDIF
 
             !-----------------------------------------------------------
-            ! For now, we are including Turner CH4-derived biofuel
-            ! C2H6 & C3H8 emissions in emfossil.F (Tzompa)
+            ! Turner CH4-derived biofuel C2H6 & C3H8 emissions (Tzompa)
             !-----------------------------------------------------------
             IF ( LTZOMPA ) THEN
 
@@ -1191,8 +1193,14 @@
      &                    (NN /= IDTXYLE) .AND. (NN /= IDTC2H4) .AND. 
      &                    (NN /= IDTC2H2) ) THEN
 
+! Don't do this for C2H6 or C3H8 if we are using Tzompa emissions! 
+                     IF ( (.not. LTZOMPA) .OR.
+     &                    ((LTZOMPA) .AND. (NN /= IDTC2H6) .AND.
+     &                                     (NN /= IDTC3H8) ) ) THEN
+
                         BIOFUEL(N,I,J) = 0.d0
 
+                     ENDIF
                      ENDIF
                   ENDIF
                ENDIF
@@ -1249,7 +1257,9 @@
                      IF ( (NN == IDTNO)   .OR. (NN == IDTCO)   .OR.
      &                    (NN == IDTALK4) .OR. (NN == IDTMEK)  .OR.
      &                    (NN == IDTALD2) .OR. (NN == IDTPRPE) .OR. 
-     &                    (NN == IDTC2H6) ) THEN
+! Don't do this for C2H6 if we are using Tzompa emissions! 
+!     &                    (NN == IDTC2H6) ) THEN
+     &                    ((NN == IDTC2H6) .AND. (.NOT. LTZOMPA)) ) THEN
 
                         BIOFUEL(N,I,J) = 0.d0
 
