@@ -1091,13 +1091,13 @@
 
                   ! Convert [molec/cm2/s] to [molec/cm3/s]
                   BIOFUEL(N,I,J) = TZOMPA / BXHEIGHT_CM
+               ENDIF
 
                ! Biofuel included w/ anthro in NEI2011 - zero
-               ! Eventually we will do this for C2H6 and C3H8
-               ELSE IF ( LNEI11 .and. (NN==IDTC2H6) .and.
-     &                   (USA_MASK(I, J) > 0d0)    ) THEN
-                  BIOFUEL(N,I,J) = 0.d0
-               ENDIF
+               IF ( LNEI11 .and. (USA_MASK(I, J) > 0d0) .and.
+     &              (NN == IDTC2H6 .or. NN == IDTC3H8) )
+     &            BIOFUEL(N,I,J) = 0.d0
+
             ENDIF
 
             !-----------------------------------------------------------

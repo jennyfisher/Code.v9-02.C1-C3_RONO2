@@ -1055,9 +1055,9 @@
          ! NEI2011 multiplied by 1.4
          !ELSEIF (  LNEI11 .and. NN .ne. IDTC2H6 ) THEN
 !!! TEMPORARY KLUDGE! Don't use NEI11 for C3H8
-         ELSEIF (  LNEI11 .and. NN .ne. IDTC3H8 ) THEN
-         !ELSEIF (  LNEI11 ) THEN
+         !ELSEIF (  LNEI11 .and. NN .ne. IDTC3H8 ) THEN
 !!!!
+         ELSEIF (  LNEI11 ) THEN
 
              ! If we are over the USA ...
             IF ( USA_MASK( I, J ) > 0d0 ) THEN
@@ -1079,7 +1079,13 @@
 
                      ! Apply Tzompa scale factor for C2H6
                      IF ( LTZOMPA .and. NN == IDTC2H6 ) 
-     &                  NEI11 = NEI11 * 1.4d0
+! Match Zitely's actual value (4x5) rather than use her scaling factor
+!     &                  NEI11 = NEI11 * 1.4d0
+     &                  NEI11 = NEI11 * 1.65d0
+
+                     ! Apply Tzompa scale factor for C3H8
+                     IF ( LTZOMPA .and. NN == IDTC3H8 ) 
+     &                  NEI11 = NEI11 * 4.2d0
 
                      ! Convert from molec/cm2/s to kg/box/timestep in order
                      ! to be in the proper units for EMISRR array
