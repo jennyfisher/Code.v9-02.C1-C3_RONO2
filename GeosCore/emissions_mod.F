@@ -123,6 +123,7 @@
       USE POPS_MOD,               ONLY : EMISSPOPS  !(clf, 2/1/2011)
       USE RCP_MOD,                ONLY : LOAD_RCP_EMISSIONS !cdh
       USE RETRO_MOD,              ONLY : EMISS_RETRO
+      USE RONO2_MOD,              ONLY : READ_CHL
       USE RnPbBe_MOD,             ONLY : EMISSRnPbBe
       USE SEASALT_MOD,            ONLY : EMISSSEASALT
       USE SSA_BROMINE_MOD,        ONLY : EMIT_Br2
@@ -486,6 +487,9 @@
      &           am_I_Root, Input_Opt, State_Chm, RC )
          ENDIF
             
+         ! Read Chlorophyll for RONO2 simulation
+         IF ( ITS_A_NEW_MONTH() ) CALL READ_CHL( MONTH )
+
          ! NOx-Ox-HC (w/ or w/o aerosols)
          CALL EMISSDR
      &      ( am_I_Root, Input_Opt, State_Met, State_Chm, RC )

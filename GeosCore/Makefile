@@ -429,7 +429,8 @@ chemistry_mod.o             : chemistry_mod.F                                \
                               RnPbBe_mod.o            seasalt_mod.o          \
                               strat_chem_mod.o        sulfate_mod.o          \
                               tagged_co_mod.o         tagged_o3_mod.o        \
-                              tomas_mod.o             tracerid_mod.o
+                              tomas_mod.o             tracerid_mod.o         \
+                              rono2_mod.o
 
 cleanup.o                   : cleanup.F                                      \
                               acetone_mod.o           aerosol_mod.o          \
@@ -474,7 +475,7 @@ cleanup.o                   : cleanup.F                                      \
                               global_bc_mod.o         global_oc_mod.o        \
                               diag53_mod.o            tomas_mod.o            \
                               finn_biomass_mod.o      rcp_mod.o              \
-                              qfed_biomass_mod.o
+                              qfed_biomass_mod.o      rono2_mod.o
 
 cldice_HBrHOBr_rxn.o        : cldice_HBrHOBr_rxn.F
 
@@ -626,7 +627,7 @@ emissdr.o                   : emissdr.F                                      \
 			      lightning_nox_mod.o     megan_mod.o            \
                               meganut_mod.o           modis_lai_mod.o        \
                               rcp_mod.o               soil_nox_mod.o         \
-                              tracerid_mod.o
+                              tracerid_mod.o          rono2_mod.o
 
 emissions_mod.o             : emissions_mod.F                                \
                               arctas_ship_emiss_mod.o biomass_mod.o          \
@@ -644,7 +645,8 @@ emissions_mod.o             : emissions_mod.F                                \
                               streets_anthro_mod.o    sulfate_mod.o          \
                               tagged_co_mod.o         tracerid_mod.o         \
                               vistas_anthro_mod.o     nei2008_anthro_mod.o   \
-			      nei2011_anthro_mod.o    turner_flux_mod.o
+			      nei2011_anthro_mod.o    turner_flux_mod.o      \
+			      rono2_mod.o
 
 epa_nei_mod.o               : epa_nei_mod.F                                  \
                               future_emissions_mod.o  scale_anthro_mod.o     \
@@ -1038,6 +1040,9 @@ retro_mod.o                 : retro_mod.F                                    \
 RnPbBe_mod.o                : RnPbBe_mod.F                                   \
                               diag_mod.o              tropopause_mod.o       \
                               vdiff_pre_mod.o
+
+rono2_mod.o                 : rono2_mod.F                                  \
+                              diag_mod.o
 
 rpmares_mod.o               : rpmares_mod.F                                  \
                               global_hno3_mod.o       tracerid_mod.o         \

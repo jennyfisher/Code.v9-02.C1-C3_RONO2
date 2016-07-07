@@ -1047,16 +1047,21 @@
 !
       IF ( ND11 > 0 ) THEN
          CATEGORY = 'ACETSRCE'
-         UNIT     = 'atoms C/cm2/s'
 
          DO M = 1, TMAX(11)
             N  = TINDEX(11,M)
             IF ( N > PD11 ) CYCLE
             NN = N 
                
+            IF ( N <= 5 ) THEN
+               UNIT     = 'atoms C/cm2/s' ! acetone
+            ELSE 
+               UNIT     = 'molec/cm2/s' ! RONO2
+            ENDIF
+
             ! Acetone ocean sink is on the chemistry timestep
             ! but acetone sources are all on the emission timestep
-            IF ( N == 7 ) THEN
+            IF ( N == 5 .or. N == 7 .or. N == 9 ) THEN
                SCALEX = SCALECHEM
             ELSE
                SCALEX = SCALESRCE

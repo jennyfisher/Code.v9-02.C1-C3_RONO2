@@ -103,6 +103,7 @@
       USE OPTDEPTH_MOD,       ONLY : OPTDEPTH
       USE POPS_MOD,           ONLY : CHEMPOPS
       USE RnPbBe_MOD,         ONLY : CHEMRnPbBe
+      USE RONO2_MOD,          ONLY : OCEAN_SINK_RONO2
       USE RPMARES_MOD,        ONLY : DO_RPMARES
       USE SEASALT_MOD,        ONLY : CHEMSEASALT
       USE SULFATE_MOD,        ONLY : CHEMSULFATE
@@ -113,6 +114,7 @@
       USE TIME_MOD,           ONLY : GET_TS_CHEM
       USE TRACERID_MOD,       ONLY : IDTACET
       USE TRACERID_MOD,       ONLY : IDTISOP
+      USE TRACERID_MOD,       ONLY : IDTMENO3, IDTETNO3
 #if   defined( TOMAS )
       USE TOMAS_MOD,          ONLY : DO_TOMAS  !(win, 7/14/09)
       USE TRACERID_MOD,       ONLY : IDTNK1    !(win, 7/14/09)
@@ -240,6 +242,9 @@
       LOGICAL       :: LSULF
       LOGICAL       :: LSOA
       LOGICAL       :: LNLPBL
+
+      REAL*8        :: ATMOS_MENO3(IIPAR, JJPAR)
+      REAL*8        :: ATMOS_ETNO3(IIPAR, JJPAR)
 
       ! SAVEd variables
       LOGICAL, SAVE :: FIRST = .TRUE.
@@ -390,6 +395,25 @@
             IF ( IDTACET /= 0 ) THEN
                CALL OCEAN_SINK_ACET( STT(:,:,1,IDTACET), State_Met ) 
             ENDIF
+
+            ! Remove RONO2 ocean sink
+            IF ( IDTMENO3 /= 0 .or. IDTETNO3 /= 0 ) THEN
+
+               ! Use dummy arrays in case only one defined
+               ATMOS_MENO3 = 0d0
+               ATMOS_ETNO3 = 0d0
+
+               IF ( IDTMENO3 /= 0) ATMOS_MENO3 = STT(:,:,1,IDTMENO3) 
+               IF ( IDTETNO3 /= 0) ATMOS_ETNO3 = STT(:,:,1,IDTETNO3) 
+
+               CALL OCEAN_SINK_RONO2( ATMOS_MENO3, ATMOS_ETNO3,
+     &                                State_Met ) 
+
+               IF ( IDTMENO3 /= 0) STT(:,:,1,IDTMENO3) = ATMOS_MENO3
+               IF ( IDTETNO3 /= 0) STT(:,:,1,IDTETNO3) = ATMOS_ETNO3
+
+            ENDIF
+
              
          !---------------------------------
          ! Offline aerosol simulation

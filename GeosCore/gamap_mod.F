@@ -4896,7 +4896,7 @@
       IF ( ND11 > 0 ) THEN
 
          ! Number of tracers
-         NTRAC(11) = 5
+         NTRAC(11) = 9
 
          ! Loop over tracers
          DO T = 1, NTRAC(11)
@@ -4906,27 +4906,52 @@
                CASE( 1 )
                   NAME (T,11) = 'ACETmo'
                   FNAME(T,11) = 'ACET from monoterpenes'
+                  MWT  (T,11) = 12e-3
                CASE( 2 )
                   NAME (T,11) = 'ACETmb'
                   FNAME(T,11) = 'ACET from methyl butenol'
+                  MWT  (T,11) = 12e-3
                CASE( 3 )
                   NAME (T,11) = 'ACETbg'
                   FNAME(T,11) = 'ACET from direct emissions'
+                  MWT  (T,11) = 12e-3
                CASE( 4 )
                   NAME (T,11) = 'ACETop'
                   FNAME(T,11) = 'ACET from ocean source'
+                  MWT  (T,11) = 12e-3
                CASE( 5 )
                   NAME (T,11) = 'ACETol'
                   FNAME(T,11) = 'ACET from ocean sink'
+                  MWT  (T,11) = 12e-3
+               CASE( 6 )
+                  NAME (T,11) = 'MeNO3op'
+                  FNAME(T,11) = 'MeNO3 from ocean source'
+                  MWT  (T,11) = 77e-3
+               CASE( 7 )
+                  NAME (T,11) = 'MeNO3ol'
+                  FNAME(T,11) = 'MeNO3 ocean sink'
+                  MWT  (T,11) = 77e-3
+               CASE( 8 )
+                  NAME (T,11) = 'EtNO3op'
+                  FNAME(T,11) = 'EtNO3 from ocean source'
+                  MWT  (T,11) = 91e-3
+               CASE( 9 )
+                  NAME (T,11) = 'EtNO3ol'
+                  FNAME(T,11) = 'EtNO3 ocean sink'
+                  MWT  (T,11) = 91e-3
                CASE DEFAULT
                   ! Nothing
             END SELECT
 
             ! Define the rest of the quantities
-            UNIT (T,11) = 'atoms C/cm2/s'
+            IF ( T < = 5 ) THEN
+               UNIT (T,11) = 'atoms C/cm2/s'
+               MOLC (T,11) = 3
+            ELSE
+               UNIT (T,11) = 'molec/cm2/s'
+               MOLC (T,11) = 1
+            ENDIF
             INDEX(T,11) = T + ( SPACING * 22 )
-            MOLC (T,11) = 3
-            MWT  (T,11) = 12e-3
             SCALE(T,11) = 1e0
          ENDDO
       ENDIF

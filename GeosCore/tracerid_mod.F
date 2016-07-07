@@ -570,6 +570,8 @@
 
       ! Add monoterpene tracers (jaf, 3/16/15)
       INTEGER            :: IDEAPI, IDELIM
+      ! Add RONO2 (jaf, 6/14/16)
+      INTEGER            :: IDEMENO3, IDEETNO3
 
       ! SEAC4RS tracers (jaf, 6/13/13)
       ! Remove passive tracers for now (skim, 5/23/14)
@@ -3186,6 +3188,14 @@
            NEMBIOG    = NEMBIOG   + 1
            IDELIM     = NEMANTHRO + NEMBIOG
          ENDIF
+         IF ( IDTMENO3 > 0 ) THEN
+           NEMBIOG    = NEMBIOG   + 1
+           IDEMENO3   = NEMANTHRO + NEMBIOG
+         ENDIF
+         IF ( IDTETNO3 > 0 ) THEN
+           NEMBIOG    = NEMBIOG   + 1
+           IDEETNO3   = NEMANTHRO + NEMBIOG
+         ENDIF
          ! SEAC4RS passive tracer (jaf, 6/14/13)
          ! Remove passive tracers (skim, 5/23/14)
          !IF ( IDTPISOP > 0 ) THEN
@@ -3248,6 +3258,8 @@
       IF ( IDEPAN  /= 0  )  IDEMS(IDEPAN   ) = IDTPAN  !evf, Aug/12
       IF ( IDEAPI  /= 0 ) IDEMS(IDEAPI ) = IDTAPI 
       IF ( IDELIM  /= 0 ) IDEMS(IDELIM ) = IDTLIM 
+      IF ( IDEMENO3  /= 0 ) IDEMS(IDEMENO3 ) = IDTMENO3 
+      IF ( IDEETNO3  /= 0 ) IDEMS(IDEETNO3 ) = IDTETNO3 
 
       ! jpp:
       IF ( IDECHBr3  /= 0 ) IDEMS(IDECHBr3 ) = IDTCHBr3
@@ -3276,6 +3288,7 @@
          WRITE( 6, 115 ) '          + 6 for dicarbonyls'
          WRITE( 6, 115 ) '          + 3 for bromine'
          WRITE( 6, 115 ) '          + 2 for monoterpenes (API, LIM)'
+         WRITE( 6, 115 ) '          + 2 for RONO2 (MeNO3, EtNO3)'
          WRITE( 6, 115 ) 'NEMBIOG:   12 max'
          WRITE( 6, 120 ) 'THIS NEMBIOG:   ', NEMBIOG
          WRITE( 6, 115 ) '-----------------------------------------'
@@ -3310,6 +3323,8 @@
          WRITE( 6, 120 ) 'IDEACTA ', IDEACTA
          WRITE( 6, 120 ) 'IDEAPI  ', IDEAPI 
          WRITE( 6, 120 ) 'IDELIM  ', IDELIM 
+         WRITE( 6, 120 ) 'IDEMENO3  ', IDEMENO3 
+         WRITE( 6, 120 ) 'IDEETNO3  ', IDEETNO3 
          ! Remove passive tracers (skim, 5/23/14)
          !WRITE( 6, 120 ) 'IDEPCOFNE', IDEPCOFNE
          !WRITE( 6, 120 ) 'IDEPCOFSE', IDEPCOFSE

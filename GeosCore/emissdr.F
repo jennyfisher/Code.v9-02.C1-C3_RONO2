@@ -101,6 +101,7 @@
 !  13 Aug 2013 - M. Sulprizio- Update MEGAN biogenics to include sesquiterpenes
 !                              for updated SOA simulation (H. Pye)
 !  20 Aug 2013 - R. Yantosca - Removed "define.h", this is now obsolete
+!  14 Jun 2016 - J. Fisher   - Add ocean source of MeNO3, EtNO3
 !******************************************************************************
 !
       ! References to F90 modules
@@ -133,6 +134,7 @@
       USE MEGANUT_MOD,        ONLY : XLTMMP
       USE MODIS_LAI_MOD
       USE RCP_MOD,            ONLY : RCP_AIREMISS! (cdh, 10/14/11)
+      USE RONO2_MOD,          ONLY : OCEAN_SOURCE_RONO2
       USE SOIL_NOX_MOD,       ONLY : SOIL_NOX_EMISSION   
       USE TIME_MOD,           ONLY : GET_MONTH,     GET_TAU
       USE TIME_MOD,           ONLY : GET_TS_EMIS,   GET_LOCALTIME
@@ -144,6 +146,8 @@
       USE TRACERID_MOD,       ONLY : IDECHBr3,      IDECH2Br2
       USE TRACERID_MOD,       ONLY : IDELIM,        IDEAPI
       USE TRACERID_MOD,       ONLY : IDTLIM,        IDTAPI
+      USE TRACERID_MOD,       ONLY : IDEMENO3,      IDTMENO3
+      USE TRACERID_MOD,       ONLY : IDEETNO3,      IDTETNO3
 
       ! SEAC4RS passive tracer (jaf, 6/14/13)
       ! Remove SEAC4RS passive tracers (skim, 5/23/14)
@@ -195,6 +199,7 @@
       REAL*8                 :: EMIS_ETOH
       REAL*8                 :: AREA_CM2
       REAL*8                 :: TMPVAL,    GRASS, BIO_ACET
+      REAL*8                 :: OCEAN_MeNO3, OCEAN_EtNO3
       REAL*8                 :: CONVERT(NVEGTYPE), GMONOT(NVEGTYPE)
       REAL*8                 :: SC, PDF, PDR
       INTEGER                :: DOY, MONTH, RC, M
@@ -484,6 +489,10 @@
             EMIS_OMON = 0d0
             EMIS_MOHX = 0d0
             EMIS_ETOH = 0d0
+
+            ! Zero ocean RONO2
+            OCEAN_MeNO3 = 0d0
+            OCEAN_EtNO3 = 0d0
 
             ! Use function GET_LOCALTIME to get the local time at lon I
             ! Middle of time step is between 10pm-2am when IHOUR = 1
@@ -887,6 +896,25 @@
 
                ENDIF
 
+!-----------------------------------------------------------------------------
+! OCEAN RONO2 SOURCE
+!
+               IF ( IDEMENO3 /= 0 .or. IDEETNO3 /= 0 ) THEN
+
+                  ! Also add ocean source of acetone [atoms C/box/s]
+                  CALL OCEAN_SOURCE_RONo2( I, J, 
+     &                                     OCEAN_MeNO3, OCEAN_EtNO3, 
+     &                                     State_Met )
+
+                  ! Add to emission array [molec/box/s]
+                  IF (IDEMENO3 /= 0)  EMISRR(I,J,IDEMENO3) =
+     &                                EMISRR(I,J,IDEMENO3) + OCEAN_MENO3
+                  IF (IDEETNO3 /= 0)  EMISRR(I,J,IDEETNO3) =
+     &                                EMISRR(I,J,IDEETNO3) + OCEAN_ETNO3
+
+               ENDIF
+!-----------------------------------------------------------------------------
+
 !
 !******************************************************************************
 !  ND46 diagnostic: Biogenic emissions 
@@ -913,6 +941,8 @@
 !     AD46(:,:,20) = Total biogenic CHBr3    emissions [kg/m2/s]
 !     AD46(:,:,21) = Total biogenic CH2Br2   emissions [kg/m2/s]
 !     AD46(:,:,22) = Total biogenic SSBr2    emissions [kg/m2/s]
+!     AD46(:,:,23) = Total ocean MeNO3       emissions [molec/cm2/s]
+!     AD46(:,:,24) = Total ocean EtNO3       emissions [molec/cm2/s]
 !--------- These are in std code---------------------------------------------
 !     AD46(:,:,14) = Total biogenic FARN     emissions [atoms C/cm2/s]
 !     AD46(:,:,15) = Total biogenic BCAR     emissions [atoms C/cm2/s]
@@ -931,6 +961,7 @@
 !                              emissions are turned off (e.g. for tagged CO)
 !  01 Dec 2012 - D. Millet   - Updated tracers (dbm, 12/2012)
 !  13 Aug 2013 - M. Sulprizio- Add sesquiterpenes for updated SOA (H.Pye)
+!  14 Jun 2016 - J. Fisher   - Add RONO2 from ocean
 !******************************************************************************
 !
                IF ( ND46 > 0 ) THEN
@@ -1026,6 +1057,12 @@
 
                   ! Note: IDEBr2 is added to AD46(I,J,22) in ssa_bromine_mod.F
                
+                  ! RONO2 ocean source [molec/cm2/s] -- tracer #23/24
+                  IF ( IDEMENO3 > 0 )
+     &            AD46(I,J,23) = AD46(I,J,23) + (OCEAN_MENO3 / AREA_CM2)
+                  IF ( IDEETNO3 > 0 )
+     &            AD46(I,J,23) = AD46(I,J,23) + (OCEAN_ETNO3 / AREA_CM2)
+
                ENDIF  
 
                ! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

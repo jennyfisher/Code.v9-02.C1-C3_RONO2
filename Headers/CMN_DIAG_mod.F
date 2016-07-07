@@ -82,7 +82,8 @@
       INTEGER, PARAMETER :: PD08=2
       INTEGER, PARAMETER :: PD09=6
       INTEGER, PARAMETER :: PD10=20            
-      INTEGER, PARAMETER :: PD11=5
+      ! +4 for RONO2 (piggyback on acetone, jaf, 6/14/16)
+      INTEGER, PARAMETER :: PD11=9
       INTEGER, PARAMETER :: PD12=0     
       INTEGER, PARAMETER :: PD13=1            
       INTEGER, PARAMETER :: PD14=NNPAR       
@@ -118,7 +119,8 @@
       INTEGER, PARAMETER :: PD45=NNPAR+1      
       ! +1 for SEAC4RS passive tracer (jaf, 6/14/13)
       !INTEGER, PARAMETER :: PD46=22      !dbm replaced 16
-      INTEGER, PARAMETER :: PD46=23      !dbm replaced 16
+      ! +2 for RONO2
+      INTEGER, PARAMETER :: PD46=24
       !---------------------------------------------------------------------
       ! This is in the std code (bmy, 10/30/13)
       !INTEGER, PARAMETER :: PD46=20
