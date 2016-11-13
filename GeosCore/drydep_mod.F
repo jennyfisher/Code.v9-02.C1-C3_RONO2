@@ -551,6 +551,20 @@
 
             ENDIF
 
+            ! For RONO2 species, we need to only do drydep over the land
+            ! and not over the oceans because ocean exchange is treated
+            ! as bi-directional flux in rono2_mod.F
+            IF ( (NN == IDTMENO3) .or. (NN == IDTETNO3) .or.
+     &           (NN == IDTPRNO3) ) THEN
+
+               IF ( IS_LAND( I, J, State_Met ) ) THEN
+                  DVZ = DVZ
+               ELSE
+                  DVZ = 0d0
+               ENDIF
+
+            ENDIF 
+
             ! Set Vd for aerosol tracers over snow/ice (J. Fisher, 8/1/11)
             IF ( ( AIROSOL(N)    ) .and. ( LSNOW(IJLOOP) )  .and. 
      &           ( NN /= IDTSALA ) .and. ( NN /= IDTSALC )  .and.
@@ -5908,55 +5922,63 @@ c$$$            FLAG(NUMDEP)    = 2
             AIROSOL(NUMDEP) = .FALSE.
             FLAG(NUMDEP)    = 4
 
+! Update these to use original GEOS-Chem dry dep!
+! Assume equivalent reactivity to NO2 (f0=0.1)
+
          ELSE IF ( N == IDTMENO3 ) THEN
-            ! Scale based on molecular weight per Nguyen et al, 2014
+            ! HSTAR = 2.0e-2 mol/m3/Pa from Sander et al. 2015
             NUMDEP          = NUMDEP + 1
             NTRAIND(NUMDEP) = IDTMENO3
-            NDVZIND(NUMDEP) = DRYDISOPN
+            NDVZIND(NUMDEP) = NUMDEP
             DEPNAME(NUMDEP) = 'MENO3'
-            HSTAR(NUMDEP)   = 0d0
-            F0(NUMDEP)      = 0d0
+            HSTAR(NUMDEP)   = 2.0d0 
+            F0(NUMDEP)      = 0.1d0
+            !F0(NUMDEP)      = 1d0  ! Sens. test 0.1d0
             XMW(NUMDEP)     = 77d-3
             AIROSOL(NUMDEP) = .FALSE.
-            FLAG(NUMDEP)    = 4
+            FLAG(NUMDEP)    = 0
 
          ELSE IF ( N == IDTETNO3 ) THEN
-            ! Scale based on molecular weight per Nguyen et al, 2014
+            ! HSTAR = 1.6e-2 mol/m3/Pa from Sander et al. 2015
             NUMDEP          = NUMDEP + 1
             NTRAIND(NUMDEP) = IDTETNO3
-            NDVZIND(NUMDEP) = DRYDISOPN
+            NDVZIND(NUMDEP) = NUMDEP
             DEPNAME(NUMDEP) = 'ETNO3'
-            HSTAR(NUMDEP)   = 0d0
-            F0(NUMDEP)      = 0d0
+            HSTAR(NUMDEP)   = 1.6d0
+            F0(NUMDEP)      = 0.1d0
+            !F0(NUMDEP)      = 1d0  ! Sens. test 0.1d0
             XMW(NUMDEP)     = 91d-3
             AIROSOL(NUMDEP) = .FALSE.
-            FLAG(NUMDEP)    = 4
+            FLAG(NUMDEP)    = 0
 
          ! Lumped species
          ELSE IF ( N == IDTPRNO3 ) THEN
-            ! Scale based on molecular weight per Nguyen et al, 2014
 
             ! First species: NPRNO3
+            ! HSTAR = 1.1e-2 mol/m3/Pa from Sander et al. 2015
             NUMDEP          = NUMDEP + 1
             NTRAIND(NUMDEP) = IDTPRNO3
-            NDVZIND(NUMDEP) = DRYDISOPN
+            NDVZIND(NUMDEP) = NUMDEP
             DEPNAME(NUMDEP) = 'NPRNO3'
-            HSTAR(NUMDEP)   = 0d0
-            F0(NUMDEP)      = 0d0
+            HSTAR(NUMDEP)   = 1.1d0
+            F0(NUMDEP)      = 0.1d0
+            !F0(NUMDEP)      = 1d0  ! Sens. test 0.1d0
             XMW(NUMDEP)     = 105d-3
             AIROSOL(NUMDEP) = .FALSE.
-            FLAG(NUMDEP)    = 4
+            FLAG(NUMDEP)    = 0
 
             ! Second species: IPRNO3
+            ! HSTAR = 7.8e-3 mol/m3/Pa from Sander et al. 2015
             NUMDEP          = NUMDEP + 1
             NTRAIND(NUMDEP) = IDTPRNO3
-            NDVZIND(NUMDEP) = DRYDISOPN
+            NDVZIND(NUMDEP) = NUMDEP
             DEPNAME(NUMDEP) = 'IPRNO3'
-            HSTAR(NUMDEP)   = 0d0
-            F0(NUMDEP)      = 0d0
+            HSTAR(NUMDEP)   = 0.79d0
+            F0(NUMDEP)      = 0.1d0
+            !F0(NUMDEP)      = 1d0  ! Sens. test 0.1d0
             XMW(NUMDEP)     = 105d-3
             AIROSOL(NUMDEP) = .FALSE.
-            FLAG(NUMDEP)    = 4
+            FLAG(NUMDEP)    = 0
 
          !----------------------------------
          ! SEAC4RS SOA tracers (jaf, 6/24/13)
