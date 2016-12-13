@@ -525,6 +525,8 @@
 
       ! Add C1-C3 RONO2 tracers (jaf, 4/15/16)
       INTEGER            :: IDTMENO3, IDTETNO3, IDTPRNO3
+      ! Unlump
+      INTEGER            :: IDTNPRNO3, IDTIPRNO3
       INTEGER            :: IDTCH4
 
       ! For tagged Hg simulation
@@ -1590,6 +1592,10 @@
                IDTETNO3  = N
             CASE ( 'PRNO3' )
                IDTPRNO3= N
+            CASE ( 'NPRNO3' )
+               IDTNPRNO3= N
+            CASE ( 'IPRNO3' )
+               IDTIPRNO3= N
             CASE ( 'CH4' )
                IDTCH4= N
 
@@ -5062,6 +5068,8 @@
       IDTMENO3  = 0
       IDTETNO3  = 0
       IDTPRNO3  = 0
+      IDTNPRNO3  = 0
+      IDTIPRNO3  = 0
       IDTCH4    = 0
  
       ! SOAupdate: convert all POA/POG to 1 and 2 (hotp 10/11/09)

@@ -2991,7 +2991,7 @@
                IF ( MMB /= NN                .OR.
      &              DEPNAME( N ) == 'ISOPNB' .OR.
      &              DEPNAME( N ) == 'MONITU' .OR.
-     &              DEPNAME( N ) == 'IPRNO3' .OR.
+!     &              DEPNAME( N ) == 'IPRNO3' .OR.
      &              DEPNAME( N ) == 'MVKN'       ) CYCLE
             ENDIF
 
@@ -3069,21 +3069,21 @@
      &                        JFIRST,    LFIRST,    ARRAY(:,:,1) )
 
 
-               CASE( 'NPRNO3' )
-                  !IPRNO3 the next deposition tracer
-                  ! Save into ARRAY
-                  ARRAY(:,:,1) = ( AD44(:,:,N+1,1) / SCALECHEM )
-
-                  ! Index under which IPRNO3 is stored
-                  T            = N_TRACERS + 4
-
-                  ! Write to file
-                  ! It's number is NNPAR+2 (see gamap_mod.f)
-                  CALL BPCH2( IU_BPCH,   MODELNAME, LONRES,   LATRES,
-     &                        HALFPOLAR, CENTER180, CATEGORY, T,
-     &                        UNIT,      DIAGb,     DIAGe,    RESERVED,   
-     &                        IIPAR,     JJPAR,     1,        IFIRST,     
-     &                        JFIRST,    LFIRST,    ARRAY(:,:,1) )
+!               CASE( 'NPRNO3' )
+!                  !IPRNO3 the next deposition tracer
+!                  ! Save into ARRAY
+!                  ARRAY(:,:,1) = ( AD44(:,:,N+1,1) / SCALECHEM )
+!
+!                  ! Index under which IPRNO3 is stored
+!                  T            = N_TRACERS + 4
+!
+!                  ! Write to file
+!                  ! It's number is NNPAR+2 (see gamap_mod.f)
+!                  CALL BPCH2( IU_BPCH,   MODELNAME, LONRES,   LATRES,
+!     &                        HALFPOLAR, CENTER180, CATEGORY, T,
+!     &                        UNIT,      DIAGb,     DIAGe,    RESERVED,   
+!     &                        IIPAR,     JJPAR,     1,        IFIRST,     
+!     &                        JFIRST,    LFIRST,    ARRAY(:,:,1) )
 
                 CASE DEFAULT
                    ! Do Nothing
@@ -3204,21 +3204,21 @@
      &                        IIPAR,     JJPAR,     1,        IFIRST,     
      &                        JFIRST,    LFIRST,    ARRAY(:,:,1) )
 
-               CASE( 'NPRNO3' )
-                  !IPRNO3 the next deposition tracer
-                  ! Save into ARRAY
-                  ARRAY(:,:,1) = ( AD44(:,:,N+1,2) / SCALECHEM )
-
-                  ! Index under which IPRNO3 is stored
-                  T            = N_TRACERS + 4
-
-                  ! Write to file
-                  ! It's number is NNPAR+4 (see gamap_mod.f)
-                  CALL BPCH2( IU_BPCH,   MODELNAME, LONRES,   LATRES,
-     &                        HALFPOLAR, CENTER180, CATEGORY, T,
-     &                        UNIT,      DIAGb,     DIAGe,    RESERVED,   
-     &                        IIPAR,     JJPAR,     1,        IFIRST,     
-     &                        JFIRST,    LFIRST,    ARRAY(:,:,1) )
+!               CASE( 'NPRNO3' )
+!                  !IPRNO3 the next deposition tracer
+!                  ! Save into ARRAY
+!                  ARRAY(:,:,1) = ( AD44(:,:,N+1,2) / SCALECHEM )
+!
+!                  ! Index under which IPRNO3 is stored
+!                  T            = N_TRACERS + 4
+!
+!                  ! Write to file
+!                  ! It's number is NNPAR+4 (see gamap_mod.f)
+!                  CALL BPCH2( IU_BPCH,   MODELNAME, LONRES,   LATRES,
+!     &                        HALFPOLAR, CENTER180, CATEGORY, T,
+!     &                        UNIT,      DIAGb,     DIAGe,    RESERVED,   
+!     &                        IIPAR,     JJPAR,     1,        IFIRST,     
+!     &                        JFIRST,    LFIRST,    ARRAY(:,:,1) )
 
                CASE DEFAULT
                   ! Do nothing

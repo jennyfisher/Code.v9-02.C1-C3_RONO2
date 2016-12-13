@@ -555,7 +555,8 @@
             ! and not over the oceans because ocean exchange is treated
             ! as bi-directional flux in rono2_mod.F
             IF ( (NN == IDTMENO3) .or. (NN == IDTETNO3) .or.
-     &           (NN == IDTPRNO3) ) THEN
+     &           (NN == IDTNPRNO3) .or. (NN == IDTIPRNO3) ) THEN
+!     &           (NN == IDTPRNO3) ) THEN
 
                IF ( IS_LAND( I, J, State_Met ) ) THEN
                   DVZ = DVZ
@@ -5952,7 +5953,9 @@ c$$$            FLAG(NUMDEP)    = 2
             FLAG(NUMDEP)    = 0
 
          ! Lumped species
-         ELSE IF ( N == IDTPRNO3 ) THEN
+         !ELSE IF ( N == IDTPRNO3 ) THEN
+         ! Un-lump
+         ELSE IF ( N == IDTNPRNO3 ) THEN
 
             ! First species: NPRNO3
             ! HSTAR = 1.1e-2 mol/m3/Pa from Sander et al. 2015
@@ -5966,6 +5969,9 @@ c$$$            FLAG(NUMDEP)    = 2
             XMW(NUMDEP)     = 105d-3
             AIROSOL(NUMDEP) = .FALSE.
             FLAG(NUMDEP)    = 0
+
+         ! Un-lump
+         ELSE IF ( N == IDTIPRNO3 ) THEN
 
             ! Second species: IPRNO3
             ! HSTAR = 7.8e-3 mol/m3/Pa from Sander et al. 2015
