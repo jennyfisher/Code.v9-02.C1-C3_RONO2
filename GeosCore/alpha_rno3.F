@@ -14,11 +14,24 @@
 !    
 !  NOTES: 
 !  09 May 2016 - J. Fisher - Initial version
+!  13 Dec 2016 - J. Fisher - Add MeNO3
 !
 !  REFERENCES:
 !  1. Butkovskaya, N., A. Kukui, and G. Le Bras. Pressure and Temperature
 !     Dependence of Ethyl Nitrate Formation in the C2H5O2 + NO Reaction.
 !     J. Phys. Chem. A, 114, 956-964, 2010.
+!  2. Williams, J. E., Le Bras, G., Kukui, A., Ziereis, H., &
+!     Brenninkmeijer, C. A. M. (2014). The impact of the chemical
+!     production of methyl nitrate from the NO +
+!     CH3O2 reaction on the global distributions of
+!     alkyl nitrates, nitrogen oxides and tropospheric ozone: a global
+!     modelling study. Atmospheric Chemistry and Physics, 14(5),
+!     2363-2382. http://doi.org/10.5194/acp-14-2363-2014
+!  3. Flocke, F., Atlas, E., Madronich, S., Schauffler, S. M., Aikin,
+!     K., Margitan, J. J., & Bui, T. P. (1998). Observations of methyl
+!     nitrate in the lower stratosphere during STRAT: Implications for its
+!     gas phase production mechanisms. Geophysical Research Letters,
+!     25(11), 1891-1894. http://doi.org/10.1029/98GL01417 
 !******************************************************************************
 !
       USE ERROR_MOD,          ONLY : GEOS_CHEM_STOP
@@ -34,19 +47,28 @@
 
       ! Use carbon number to check that this species has a yield defined
       ! in this function.
-      IF ( XCARBN /= 2 ) THEN
+      IF ( XCARBN /= 1 .AND. XCARBN /= 2 ) THEN
          WRITE(6,*) 'No P-T dependent yield found for species with '
          WRITE(6,*) 'C number = ',XCARBN
          WRITE(6,*) 'Check globchem.dat and alpha_rno3.F!'
          CALL GEOS_CHEM_STOP
       ENDIF
 
-      ! EtNO3 -- turn into IF statement if additional species added
-      ! Calculate yield based on Butkovskaya 2010
-      ! 2.9488 is coefficient for P in atm from 3.88e-3 for P in Torr
-      ! Divide by 100 to convert from % to yield
-      ALPHA_RNO3 = 1e-2 * ( 2.9488 * PRESS_ATM + 
-     &                  0.365 * (1e0 + 1.5e3 * (1e0/T_K - 1e0/298e0)) )
+      IF ( XCARBN == 1 ) THEN
+         ! MeNO3
+         ! For now use midrange aircraft derived value from Flocke et
+         ! al. (1998) as implemented in Williams et al. (2014). This is
+         ! just a constant value, but it is too small to put into
+         ! globchem.dat
+         ALPHA_RNO3 = 0.00025
+      ELSE IF ( XCARBN == 2 ) THEN
+         ! EtNO3 
+         ! Calculate yield based on Butkovskaya 2010
+         ! 2.9488 is coefficient for P in atm from 3.88e-3 for P in Torr
+         ! Divide by 100 to convert from % to yield
+         ALPHA_RNO3 = 1e-2 * ( (2.9488e0 * PRESS_ATM )
+     &                        *(1e0 + 1.5e3 * (1e0/T_K - 1e0/298e0)) )
+      ENDIF
 
       ! Return to calling program
       END FUNCTION ALPHA_RNO3
