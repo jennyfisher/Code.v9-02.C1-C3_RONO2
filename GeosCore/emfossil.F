@@ -1085,7 +1085,10 @@
 
                      ! Apply Tzompa scale factor for C3H8
                      IF ( LTZOMPA .and. NN == IDTC3H8 ) 
-     &                  NEI11 = NEI11 * 4.2d0
+!! TEST KLUDGE -- NEI*4.2 still underesimates SEAC4RS & FRAPPE C3H8 BY A LOT (2-3x).
+!! TEST bigger number NEI*10.0?
+!!     &                  NEI11 = NEI11 * 4.2d0
+     &                  NEI11 = NEI11 * 10.0d0
 
                      ! Convert from molec/cm2/s to kg/box/timestep in order
                      ! to be in the proper units for EMISRR array
