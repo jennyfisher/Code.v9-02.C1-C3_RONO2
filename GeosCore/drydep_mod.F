@@ -1,4 +1,4 @@
-!------------------------------------------------------------------------------
+! ------------------------------------------------------------------------------
 !          Harvard University Atmospheric Chemistry Modeling Group            !
 !------------------------------------------------------------------------------
 !BOP
@@ -5960,7 +5960,7 @@ c$$$            FLAG(NUMDEP)    = 2
             ! First species: NPRNO3
             ! HSTAR = 1.1e-2 mol/m3/Pa from Sander et al. 2015
             NUMDEP          = NUMDEP + 1
-            NTRAIND(NUMDEP) = IDTPRNO3
+            NTRAIND(NUMDEP) = IDTNPRNO3
             NDVZIND(NUMDEP) = NUMDEP
             DEPNAME(NUMDEP) = 'NPRNO3'
             HSTAR(NUMDEP)   = 1.1d0
@@ -5976,7 +5976,7 @@ c$$$            FLAG(NUMDEP)    = 2
             ! Second species: IPRNO3
             ! HSTAR = 7.8e-3 mol/m3/Pa from Sander et al. 2015
             NUMDEP          = NUMDEP + 1
-            NTRAIND(NUMDEP) = IDTPRNO3
+            NTRAIND(NUMDEP) = IDTIPRNO3
             NDVZIND(NUMDEP) = NUMDEP
             DEPNAME(NUMDEP) = 'IPRNO3'
             HSTAR(NUMDEP)   = 0.79d0
