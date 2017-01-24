@@ -902,7 +902,7 @@
                IF ( IDEMENO3 /= 0 .or. IDEETNO3 /= 0 ) THEN
 
                   ! Also add ocean source of acetone [atoms C/box/s]
-                  CALL OCEAN_SOURCE_RONo2( I, J, 
+                  CALL OCEAN_SOURCE_RONO2( I, J, 
      &                                     OCEAN_MeNO3, OCEAN_EtNO3, 
      &                                     State_Met )
 

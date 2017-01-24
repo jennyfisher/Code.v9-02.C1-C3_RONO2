@@ -44,6 +44,6 @@
       ZZYN   = 1./(1.+ AAA*AAA )
       RARB   = (XXYN/(1.+ (XXYN/YYYN)))*(XF**ZZYN)
       FYRNO3 = RARB/(1. + RARB)
-     
+
       ! Return to calling program
       END FUNCTION FYRNO3

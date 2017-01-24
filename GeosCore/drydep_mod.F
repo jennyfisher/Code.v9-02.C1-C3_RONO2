@@ -554,8 +554,9 @@
             ! For RONO2 species, we need to only do drydep over the land
             ! and not over the oceans because ocean exchange is treated
             ! as bi-directional flux in rono2_mod.F
-            IF ( (NN == IDTMENO3) .or. (NN == IDTETNO3) .or.
-     &           (NN == IDTNPRNO3) .or. (NN == IDTIPRNO3) ) THEN
+            IF ( (NN == IDTMENO3) .or. (NN == IDTETNO3) ) THEN
+!            IF ( (NN == IDTMENO3) .or. (NN == IDTETNO3) .or.
+!     &           (NN == IDTNPRNO3) .or. (NN == IDTIPRNO3) ) THEN
 !     &           (NN == IDTPRNO3) ) THEN
 
                IF ( IS_LAND( I, J, State_Met ) ) THEN

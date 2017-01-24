@@ -59,9 +59,10 @@
 !      REAL*8,  PARAMETER     :: Vb_EtNO3 = 84d0 ! cm3/mol
 
       ! Vb: Le Bas additive  method as in Dahl et al. 2005
-      REAL*8,  PARAMETER     :: Vb_CO2   = 29.6d0 ! cm3/mol
-      REAL*8,  PARAMETER     :: Vb_MeNO3 = 66.4d0 ! cm3/mol
-      REAL*8,  PARAMETER     :: Vb_EtNO3 = 88.6d0 ! cm3/mol
+      ! Now use Kornilov & Klselev 2015 for MeNO3, EtNO3
+      REAL*8,  PARAMETER     :: Vb_CO2   = 34d0 ! cm3/mol
+      REAL*8,  PARAMETER     :: Vb_MeNO3 = 64d0 ! cm3/mol
+      REAL*8,  PARAMETER     :: Vb_EtNO3 = 82.2d0 ! cm3/mol
 
       ! CO2 Schmidt number coefficients (see ocean_mercury_mod.F)
       REAL*8,  PARAMETER     :: ScCO2_A = 644.7d0
