@@ -60,7 +60,13 @@
          ! al. (1998) as implemented in Williams et al. (2014). This is
          ! just a constant value, but it is too small to put into
          ! globchem.dat
-         ALPHA_RNO3 = 0.00025
+         ! Update 16 Jun 2017
+         ! MeNO3 too low everywhere. Using Carter & Atkinson formula
+         ! made it way too high. Try smaller increase to 0.0003 which is
+         ! upper limit of Flocke (= 1 order of magnitude smaller than
+         ! Carter & Atkinson prediction extrapolated, and than lower
+         ! limit of Butkovskaka)
+         ALPHA_RNO3 = 0.0003
       ELSE IF ( XCARBN == 2 ) THEN
          ! EtNO3 
          ! Calculate yield based on Butkovskaya 2010
