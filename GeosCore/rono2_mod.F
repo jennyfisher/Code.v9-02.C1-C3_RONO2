@@ -102,7 +102,7 @@
       USE ERROR_MOD,          ONLY : CHECK_VALUE
       USE DIAG_MOD,           ONLY : AD11
       USE GIGC_State_Met_Mod, ONLY : MetState
-      USE GRID_MOD,           ONLY : GET_AREA_CM2, GET_YMID
+      USE GRID_MOD,           ONLY : GET_AREA_CM2, GET_YMID, GET_XMID
       USE TIME_MOD,           ONLY : GET_TS_EMIS
 
       USE CMN_SIZE_MOD             ! Size parameters
@@ -131,7 +131,7 @@
 ! !LOCAL VARIABLES:
 !
       REAL*8                 :: U, USTAR, TC, CD, ScCO2
-      REAL*8                 :: DTSRCE, AREA_CM2, FOCEAN, LAT
+      REAL*8                 :: DTSRCE, AREA_CM2, FOCEAN, LAT, LON
       REAL*8                 :: SC_MeNO3, HSTAR_MeNO3, C_MeNO3
       REAL*8                 :: KG_MeNO3, KL_MeNO3, KKL_MeNO3
       REAL*8                 :: SC_EtNO3, HSTAR_EtNO3, C_EtNO3
@@ -156,12 +156,14 @@
 
       ! Latitude of grid box
       LAT = GET_YMID( I, J, 1)
+      LON = GET_XMID( I, J, 1)
 
       !=================================================================
       ! Compute ocean source if 50% of the box is covered by water
       ! and we are in region where ocean fluxes defined (20S - 20N)
       !=================================================================
-      IF ( FOCEAN > 0.5d0 .and. ABS(LAT) <= 20d0 ) THEN 
+!      IF ( FOCEAN > 0.5d0 .and. ABS(LAT) <= 20d0 ) THEN 
+      IF ( FOCEAN > 0.5d0 ) THEN
 
          ! Magnitude of resultant wind [m/s]
          ! SFCWINDSQR(I,J) is needed since this will compute the square
@@ -236,28 +238,89 @@
          !===============================================================
          ! Assume constant seawater concentration by latitude (C), pM
          ! 
-         ! For now, use values from Dahl et al. 2007 distributions.
-         ! Separate into low- and high- chlorophyll (0.1 mg/m3).
-         IF ( ABS(LAT) <= 10.0 ) THEN
+!         ! For now, use values from Dahl et al. 2007 distributions.
+!         ! Separate into low- and high- chlorophyll (0.1 mg/m3).
+!!         IF ( ABS(LAT) <= 10.0 ) THEN
+!!
+!!            ! Roughly "Warm Pool"
+!!            IF ( CHL(I,J) < 0.1 ) THEN
+!!                C_MeNO3 = 25d0
+!!                C_EtNO3 = 5d0
+!!            ! Roughly "Equatorial" & "Sub-equatorial" / "HC"
+!!            ELSE
+!!                C_MeNO3 = 300d0
+!!                C_EtNO3 = 60d0
+!!            ENDIF
+!!
+!!         ! Roughly "Gyre"
+!!         ELSE IF ( ABS(LAT) <= 20.0 ) THEN
+!!            C_MeNO3 = 5d0
+!!            C_EtNO3 = 2d0
+!!         ELSE
+!!            C_MeNO3 = 0d0
+!!            C_EtNO3 = 0d0
+!!         ENDIF
+!!
+!!
+!         ! Test applying chlorophyll-based cutoffs everywhere globally
+!         ! Maintain higher values in low-Chl sub-equatorial/warm pool
+!         IF ( CHL(I,J) >= 0.1 ) THEN
+!            C_MeNO3 = 300d0
+!            C_EtNO3 = 60d0
+!         ELSE
+!            IF ( ABS(LAT) <= 10.0 ) THEN
+!                C_MeNO3 = 25d0
+!                C_EtNO3 = 5d0
+!            ELSE
+!                C_MeNO3 = 5d0
+!                C_EtNO3 = 2d0
+!            ENDIF
+!         ENDIF
+!! end test
+!@!         ! New test - tie to ocean nitrite (NO2-). Based on Dahl et al.
+!@!         ! 2008. May explain relationship with chlorophyll as co-variate
+!@!         ! Nitrite measurements very limited, so for now using ODV
+!@!         ! datasets GEOSECS and Reid-Mantyla to identify regions with
+!@!         ! elevated nitrite by lat/lon. This only allows two options.
+!@!         ! Might eventually tie tropical amount to chlorophyll as better
+!@!         ! proxy...
+!@!         IF (( LAT < -40.0 ) .OR. 
+!@!     &      ( LAT > 50.0  ) .OR.
+!@!     &      ((LAT > 40.0) .AND. (LON < -130.0)) .OR.
+!@!     &      ((LAT > 40.0) .AND. (LON > 130.0)) .OR.
+!@!     &      ((LAT > -10.0) .AND. (LAT < 5.0) .AND. (LON < -80.0)) .OR.
+!@!     &      ((LAT > -10.0) .AND. (LAT < 5.0) .AND. (LON > 130.0)) .OR.
+!@!     &      ((LAT > -15.0) .AND. (LAT < -5.0) .AND. (LON > -25.0) .AND.
+!@!     &       (LON < 30.0)) ) THEN
+!@!            C_MeNO3 = 350d0
+!@!            C_EtNO3 = 60d0
+!@!         ELSE
+!@!            C_MeNO3 = 0d0
+!@!            C_EtNO3 = 0d0
+!@!         ENDIF
 
-            ! Roughly "Warm Pool"
-            IF ( CHL(I,J) < 0.1 ) THEN
+         ! Combine the two... use nitrite based cut-off for polar waters
+         ! but chlorophyll as more spatially resolved proxy for
+         ! equatorial waters...
+         IF (( LAT < -40.0 ) .OR. 
+     &       ( LAT > 50.0  ) .OR.
+     &       ((LAT > 40.0) .AND. (LON < -130.0)) .OR.
+     &       ((LAT > 40.0) .AND. (LON > 130.0)) ) THEN
+            C_MeNO3 = 350d0
+            C_EtNO3 = 60d0
+         ELSE IF ( (LAT > -15.0) .AND. (LAT < 10.0) ) THEN
+            IF ( CHL(I,J) >= 0.1 ) THEN
+                C_MeNO3 = 350d0
+                C_EtNO3 = 60d0
+            ELSE
                 C_MeNO3 = 25d0
                 C_EtNO3 = 5d0
-            ! Roughly "Equatorial" & "Sub-equatorial" / "HC"
-            ELSE
-                C_MeNO3 = 300d0
-                C_EtNO3 = 60d0
             ENDIF
-
-         ! Roughly "Gyre"
-         ELSE IF ( ABS(LAT) <= 20.0 ) THEN
-            C_MeNO3 = 5d0
-            C_EtNO3 = 2d0
          ELSE
             C_MeNO3 = 0d0
             C_EtNO3 = 0d0
          ENDIF
+
 
          ! convert from pM to kg/cm3
          C_MeNO3 = C_MeNO3 * 77d-18
