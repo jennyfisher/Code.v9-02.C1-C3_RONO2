@@ -87,6 +87,10 @@
          THISYEAR = CH4_YEAR 
       ENDIF
       THISMONTH = GET_MONTH()
+
+!      !!!! SENSITIVITY! 2000 CH4!
+!      THISYEAR = 2000
+!      !!!! SENSITIVITY! 2000 CH4!
  
       ! Is this year and/or month different than what has been read?
       IF ( PREVYEAR .ne. THISYEAR .or. PREVMONTH .ne. THISMONTH ) THEN
@@ -96,6 +100,7 @@
 100      FORMAT( '         => Reading from file: ', a )
          IF ( am_I_Root ) THEN
             WRITE( 6, 100 ) TRIM( filename )
+            WRITE( 6, * ) 'YEAR: ',THISYEAR
          ENDIF
        
          call NcOp_Rd( fileID, TRIM( FILENAME ) )

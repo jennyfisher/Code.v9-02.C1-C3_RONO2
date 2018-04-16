@@ -27,6 +27,7 @@
       USE EMEP_MOD,           ONLY : GET_EMEP_ANTHRO,  GET_EUROPE_MASK
       USE EPA_NEI_MOD,        ONLY : GET_EPA_ANTHRO,   GET_USA_MASK
       USE GRID_MOD,           ONLY : GET_AREA_CM2, GET_XEDGE, GET_YEDGE
+      USE GRID_MOD,           ONLY : GET_XMID, GET_YMID
       USE RETRO_MOD,          ONLY : GET_RETRO_ANTHRO
       USE C2H6_MOD,           ONLY : GET_C2H6_ANTHRO
       USE NEI2005_ANTHRO_MOD, ONLY : GET_NEI2005_ANTHRO
@@ -38,6 +39,7 @@
       USE RCP_MOD,            ONLY : GET_RCP_EMISSION
                               
       USE USA_MASK_MOD,       ONLY : USA_MASK
+      USE STREETS_ANTHRO_MOD, ONLY : GET_CHINA_MASK
       USE STREETS_ANTHRO_MOD, ONLY : GET_SE_ASIA_MASK
       USE STREETS_ANTHRO_MOD, ONLY : GET_STREETS_ANTHRO
       USE TIME_MOD,           ONLY : GET_TS_EMIS
@@ -186,7 +188,7 @@
       ! 10/24/12, ckeller: NOX diurnal scale factors fix:
       INTEGER :: NOXHOUR
       ! 06/26/13, skim: Passive Tracers implemented by jaf
-      ! REAL*8  :: X, Y
+      REAL*8  :: X, Y
       REAL*8  :: RCP
 
       ! For fields from Input_Opt
@@ -745,6 +747,42 @@
 !            ENDIF
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+!            !!!! SENSITIVITY TEST! USE ~2000 values for NOx from Hoesly
+!            !!!!                   2017 GMDD
+!            X = GET_XMID( I, J, 1 )
+!            Y = GET_YMID( I, J, 1 )
+!
+!            ! North America not inc. Mexico
+!            IF ( USA_MASK(I,J) > 0d0 .OR.
+!     &           GET_CANADA_MASK(I,J) > 0d0 ) THEN
+!                 EMX(LL) = EMX(LL) * 2d0
+!            ! Former Soviet Union (approx.)
+!            ELSE IF ( (Y > 50.0) .AND. (X > 30.0) ) THEN
+!                 EMX(LL) = EMX(LL) * 2d0
+!            ! Rest of Europe
+!            ELSE IF ( GET_EUROPE_MASK(I,J) > 0d0 ) THEN
+!                 EMX(LL) = EMX(LL) * 2d0
+!            ! China 
+!            ELSE IF ( GET_CHINA_MASK(I,J) > 0d0 ) THEN
+!                 EMX(LL) = EMX(LL) / 3.5d0
+!            ! Other Asia
+!            ELSE IF ( GET_SE_ASIA_MASK(I,J) > 0d0 ) THEN
+!                 EMX(LL) = EMX(LL) / 1.9d0
+!            ! Mexico
+!            ELSE IF ( GET_BRAVO_MASK(I,J) > 0d0 ) THEN
+!                 EMX(LL) = EMX(LL) / 1.6d0
+!            ! Other Latin America
+!            ELSE IF ( (Y < 20.0) .AND. (X < -30.0) ) THEN
+!                 EMX(LL) = EMX(LL) /1.6d0
+!            ! Africa (approx.)
+!            ELSE IF ( (Y < 40.0) .AND. 
+!     &                (X > -30.0) .AND. (X < 60.d0) ) THEN
+!                 EMX(LL) = EMX(LL) /1.6d0
+!            ENDIF
+!            !!!! SENSITIVITY TEST! USE ~2000 values for NOx from Hoesly
+
+
+
             !-----------------------------------------------------------
             ! Store in EMISRRN array and archive diagnostics
             !-----------------------------------------------------------
@@ -979,6 +1017,13 @@
                   ! Apply time-of-day factor
                   EMEP   = EMEP * TODX
 
+
+!                  !!! SENSITIVITY! USE ~2000 VALUE FOR U.S. (Helmig2013)
+!                  IF ( NN == IDTC2H6 ) EMEP = EMEP * 1.014d0
+!                  IF ( NN == IDTC3H8 ) EMEP = EMEP * 0.98d0
+!                  !!! SENSITIVITY! USE ~2000 VALUE FOR U.S. (Helmig2013)
+
+
                   ! Convert from molec/cm2/s to kg/box/timestep in order
                   ! to be in the proper units for EMISRR array
                   EMX(1) = EMEP * ( DTSRCE * AREA_CM2 ) / XNUMOL(NN) 
@@ -1083,12 +1128,21 @@
 !     &                  NEI11 = NEI11 * 1.4d0
      &                  NEI11 = NEI11 * 1.65d0
 
+
+
                      ! Apply Tzompa scale factor for C3H8
                      IF ( LTZOMPA .and. NN == IDTC3H8 ) 
 !! TEST KLUDGE -- NEI*4.2 still underesimates SEAC4RS & FRAPPE C3H8 BY A LOT (2-3x).
 !! TEST bigger number NEI*10.0?
 !!     &                  NEI11 = NEI11 * 4.2d0
      &                  NEI11 = NEI11 * 10.0d0
+
+!                     !!! SENSITIVITY! USE ~2000 VALUE FOR U.S. (Helmig2013)
+!                     IF ( NN == IDTC2H6 ) NEI11 = NEI11 * 0.92d0
+!                     IF ( NN == IDTC3H8 ) NEI11 = NEI11 * 0.89d0
+!                     !!! SENSITIVITY! USE ~2000 VALUE FOR U.S. (Helmig2013)
+
+
 
                      ! Convert from molec/cm2/s to kg/box/timestep in order
                      ! to be in the proper units for EMISRR array

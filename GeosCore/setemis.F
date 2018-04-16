@@ -557,6 +557,11 @@
                   
                   ! Add possible scaling of NOx emissions
                   SHIP = SHIP * NOx_SCALING
+
+!            !!!! SENSITIVITY TEST! USE ~2000 values for NOx from Hoesly
+!            !!!!      print*,'scaling ship emissiosn for sensitivity test!'
+!                  SHIP = SHIP / 1.8d0
+!            !!!! SENSITIVITY TEST! USE ~2000 values for NOx from Hoesly
                   
                   !----------------------------------
                   ! Get J-Values for J(NO2) and J(O3)
