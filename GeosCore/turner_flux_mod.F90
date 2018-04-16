@@ -217,6 +217,7 @@
 !
       USE DIRECTORY_MOD,     ONLY : DATA_DIR
       USE DIRECTORY_MOD,     ONLY : DATA_DIR_1x1
+      USE ERROR_MOD,         ONLY : GEOS_CHEM_STOP
       USE GRID_MOD,          ONLY : GET_XOFFSET
       USE GRID_MOD,          ONLY : GET_YOFFSET
       USE GLOBAL_GRID_MOD,   ONLY : GET_XEDGE_G, GET_YEDGE_G
@@ -268,9 +269,12 @@
       INTEGER                    :: KLM, SPECIES_ID(18)
       INTEGER                    :: st3d(3), ct3d(3)
       INTEGER                    :: fId
-      REAL*8                     :: ARRAYtmp(72,46,1)
-      REAL*8                     :: ARRAYan(72,46)
-      REAL*8                     :: ARRAYbf(72,46)
+!      REAL*8                     :: ARRAYtmp(72,46,1)
+!      REAL*8                     :: ARRAYan(72,46)
+!      REAL*8                     :: ARRAYbf(72,46)
+      REAL*8                     :: ARRAYtmp(IIPAR,JJPAR,1)
+      REAL*8                     :: ARRAYan(IIPAR,JJPAR)
+      REAL*8                     :: ARRAYbf(IIPAR,JJPAR)
       REAL*8, TARGET             :: GEOS_NATIVE(I01x01,J01x01)
       CHARACTER(LEN=255)         :: DATA_DIR_TURNER
       CHARACTER(LEN=255)         :: FILENAME, LLFILENAME
@@ -357,9 +361,21 @@
       LLFILENAME = TRIM( DATA_DIR_1x1) // &
                   'MAP_A2A_Regrid_201203/MAP_A2A_latlon_generic01x01.nc'
 
+#if   defined( GRID4x5 )
       ! Base data directory - for now 4x5 files only!
       DATA_DIR_TURNER = '/short/m19/geos-chem/data/' // &
                         'ExtData/HEMCO/TURNER/v2016-05/4x5/'
+#elif defined( GRID2x25 )
+      ! Base data directory - 4x5 files regridded to 2x2.5
+      DATA_DIR_TURNER = '/short/m19/geos-chem/data/' // &
+                        'ExtData/HEMCO/TURNER/v2016-05/2x2.5/'
+#else
+      ! Write error message and stop the run
+      WRITE ( 6, '(a)' ) 'No Turner fields for this resolution!'
+
+      ! DEALLOCATE memory and stop
+      CALL GEOS_CHEM_STOP
+#endif
 
       ! Filename - biofuel & oil/gas fluxes not time-varying
       FILENAME = TRIM( DATA_DIR_TURNER ) // &
@@ -371,6 +387,9 @@
 
       ! Open netCDF file for reading
       CALL Ncop_Rd(fId,  TRIM(FILENAME))
+
+      PRINT*,TRIM(FILENAME)
+      CALL FLUSH(6)
       
  100  FORMAT( '     - EMISS_TURNER_FLUX:  Reading ', a, ' -> ', a )
 
