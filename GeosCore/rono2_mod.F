@@ -302,16 +302,21 @@
          ! Combine the two... use nitrite based cut-off for polar waters
          ! but chlorophyll as more spatially resolved proxy for
          ! equatorial waters...
-         IF (( LAT < -40.0 ) .OR. 
-     &       ( LAT > 50.0  ) .OR.
+         ! Note relationships in Dahl et al. 2007 - MeNO3 ~ 6xEtNO3
+         ! There is no observational rationale for NPac << SPac, EqPac
+         ! except to fit the aircraft obs. Same for SPac < EqPac
+         IF ( LAT < -40.0 ) THEN
+            C_MeNO3 = 200d0
+            C_EtNO3 = 33d0
+         ELSE IF (( LAT > 50.0  ) .OR.
      &       ((LAT > 40.0) .AND. (LON < -130.0)) .OR.
-     &       ((LAT > 40.0) .AND. (LON > 130.0)) ) THEN
-            C_MeNO3 = 350d0
-            C_EtNO3 = 60d0
+     &       ((LAT > 40.0) .AND. (LON >  130.0)) ) THEN
+            C_MeNO3 =120d0 
+            C_EtNO3 = 20d0
          ELSE IF ( (LAT > -15.0) .AND. (LAT < 10.0) ) THEN
             IF ( CHL(I,J) >= 0.1 ) THEN
-                C_MeNO3 = 350d0
-                C_EtNO3 = 60d0
+                C_MeNO3 = 400d0
+                C_EtNO3 = 67d0
             ELSE
                 C_MeNO3 = 25d0
                 C_EtNO3 = 5d0
